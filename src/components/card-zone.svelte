@@ -2,7 +2,6 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import Card from './card.svelte';
 	import type { CardType } from '../types/card.type';
-	import CardZoneMenu from './card-zone-menu.svelte';
 
 	export let style: string = '',
 		cards: CardType[] = [];
@@ -21,10 +20,6 @@
 	on:finalize={handleDrop}
 >
 	{#each cards as card, index (card.id)}
-		<Card
-			{card}
-			style="position: absolute; height: 100%; width: 100%; margin-left: calc({index}% * 12);"
-		/>
+		<Card {card} style="position: absolute; height: 100%; width: 100%; margin-left: calc({index}% * 12);" />
 	{/each}
 </div>
-<CardZoneMenu />
