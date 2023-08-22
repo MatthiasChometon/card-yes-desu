@@ -4,13 +4,18 @@
 	import type { CardType } from '../types/card.type';
 
 	export let style: string = '',
-		cards: CardType[] = [];
+		cards: CardType[] = [],
+		superimposed: boolean = false;
 
 	let dropTargetStyle = {
 		background: 'rgba(0, 0, 0, 0.2)'
 	};
 
 	const handleDrop = (e: { detail: { items: CardType[] } }) => (cards = e.detail.items);
+
+	function getMarginLeft(index: number): string {
+		return superimposed ? '0' : `${index * 12}px`;
+	}
 </script>
 
 <div
@@ -20,6 +25,6 @@
 	on:finalize={handleDrop}
 >
 	{#each cards as card, index (card.id)}
-		<Card {card} style="position: absolute; height: 100%; width: 100%; margin-left: calc({index}% * 12);" />
+		<Card {card} style="position: absolute; height: 100%; width: 100%; margin-left: {getMarginLeft(index)};" />
 	{/each}
 </div>

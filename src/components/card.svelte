@@ -1,30 +1,36 @@
 <script lang="ts">
 	import type { CardType } from '../types/card.type';
 
-	let rotation = 0;
+	let rotation = 0,
+		faceUp = true;
+
 	export let menuItems: { onClick: () => void; displayText: string }[] = [
 			{
 				displayText: 'Defense position',
 				onClick: () => {
 					rotation = 90;
+					faceUp = true;
 				}
 			},
 			{
 				displayText: 'Attack position',
 				onClick: () => {
 					rotation = 0;
+					faceUp = true;
 				}
 			},
 			{
 				displayText: 'Flip position',
 				onClick: () => {
-					console.log('clicked');
+					rotation = 90;
+					faceUp = false;
 				}
 			}
 		],
 		card: CardType,
 		style: string = '';
 
+	$: pictureDisplayed = faceUp ? card.frontPicture : card.backPicture;
 	let position = { x: 0, y: 0 };
 	let showMenu = false;
 
@@ -39,7 +45,14 @@
 </script>
 
 <div
-	style="background-color: {card.color}; color: white; transform: rotate({rotation}deg); {style}"
+	style="
+		background-image: url({pictureDisplayed});
+		background-size: contain;
+		background-repeat: no-repeat;
+		color: white;
+		transform: rotate({rotation}deg);
+		{style}
+	"
 	role="button"
 	tabindex="0"
 	on:contextmenu|preventDefault={rightClickContextMenu}

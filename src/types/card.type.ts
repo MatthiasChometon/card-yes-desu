@@ -1,4 +1,5 @@
 export interface CardType {
   id: string
-  color: string
+  frontPicture: string
+  backPicture: string
 }
