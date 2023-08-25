@@ -2,10 +2,12 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import Card from './card.svelte';
 	import type { PlayableCard } from '../types/playable-card.type';
+	import type { GameCardState } from '../types/game-card-state.type';
 
 	export let style: string = '',
 		cards: PlayableCard[] = [],
 		superimposed: boolean = false,
+		gameCardState: GameCardState | null = null,
 		cardStyle: string = '';
 
 	let dropTargetStyle = {
@@ -17,6 +19,12 @@
 	function getMarginLeft(index: number): string {
 		return superimposed ? '0' : `${index * 12}px`;
 	}
+
+	function getCard(card: PlayableCard): PlayableCard {
+		if (gameCardState === null) return card;
+
+		return { ...card, gameState: { ...card.gameState, ...gameCardState } };
+	}
 </script>
 
 <div
@@ -27,7 +35,7 @@
 >
 	{#each cards as card, index (card.id)}
 		<Card
-			{card}
+			card={getCard(card)}
 			style="position: absolute; height: 100%; width: 100%; margin-left: {getMarginLeft(index)}; {cardStyle}"
 		/>
 	{/each}

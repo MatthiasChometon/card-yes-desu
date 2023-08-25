@@ -17,13 +17,13 @@
 	/>
 	<div style="aspect-ratio: {cardRatio}; height: 100%; display: flex; flex-direction: column;">
 		<div style="flex: 1; display: flex; width: 100%; margin-top: 1.7%;">
-			<CardZone superimposed {cards} style="margin-left: 2.1%;" />
+			<CardZone superimposed gameCardState={{ faceUp: false, rotation: 0 }} {cards} style="margin-left: 2.1%;" />
 			<CardZone style="margin-left: 12.2%;" />
 			<CardZone style="margin-left: 3.5%;" />
 			<CardZone style="margin-left: 3.5%;" />
 			<CardZone style="margin-left: 3.5%;" />
 			<CardZone style="margin-left: 3.4%;" />
-			<CardZone superimposed style="margin-left: 12.2%;" />
+			<CardZone superimposed gameCardState={{ faceUp: false, rotation: 0 }} style="margin-left: 12.2%;" />
 		</div>
 		<div style="flex: 1; display: flex; width: 100%;">
 			<CardZone superimposed style="margin-left: 2.1%;" />
@@ -52,13 +52,13 @@
 			<CardZone superimposed style="margin-left: 1.6%;" />
 		</div>
 		<div style="flex: 1; display: flex; width: 100%; margin-bottom: 1%;">
-			<CardZone superimposed style="margin-left: 2.3%;" />
+			<CardZone superimposed gameCardState={{ faceUp: false, rotation: 0 }} style="margin-left: 2.3%;" />
 			<CardZone style="margin-left: 12.2%;" />
 			<CardZone style="margin-left: 3.5%;" />
 			<CardZone style="margin-left: 3.5%;" />
 			<CardZone style="margin-left: 3.5%;" />
 			<CardZone style="margin-left: 3.4%;" />
-			<CardZone superimposed style="margin-left: 12.2%;" />
+			<CardZone superimposed gameCardState={{ faceUp: false, rotation: 0 }} style="margin-left: 12.2%;" />
 		</div>
 	</div>
 </div>

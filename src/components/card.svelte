@@ -28,7 +28,6 @@
 		}
 	];
 	$: pictureDisplayed = card.gameState.faceUp ? card.frontPicture : card.backPicture;
-	$: rotation = card.gameState.rotation;
 	let position = { x: 0, y: 0 };
 	let showMenu = false;
 
