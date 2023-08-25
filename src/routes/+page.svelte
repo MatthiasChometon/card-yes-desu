@@ -1,32 +1,41 @@
 <script lang="ts">
 	import CardHand from '../components/card-hand.svelte';
 	import GameBoard from '../components/game-board.svelte';
-	import type { CardSizeType } from '../types/card-size.type';
-	import type { CardType } from '../types/card.type';
+	import type { CardSize } from '../types/card-size.type';
+	import type { PlayableCard } from '../types/playable-card.type';
 
-	const cardSize: CardSizeType = { height: 13.6, width: 9 };
+	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
-	let cards: CardType[] = [
+	const gameState = {
+		rotation: 0,
+		faceUp: true
+	};
+
+	let cards: PlayableCard[] = [
 		{
 			id: '1',
 			frontPicture: 'https://m.media-amazon.com/images/I/51N+J-WhXCL._AC_UF894,1000_QL80_.jpg',
-			backPicture: 'back-card.png'
+			backPicture: 'back-card.png',
+			gameState
 		},
 		{
 			id: '2',
 			frontPicture:
 				'https://images.saymedia-content.com/.image/t_share/MTc0NDYwODIxMDE4MTI1Njcy/top-10-strongest-yu-gi-oh-flip-effect-monsters.png',
-			backPicture: 'back-card.png'
+			backPicture: 'back-card.png',
+			gameState
 		},
 		{
 			id: '3',
 			frontPicture: 'https://m.media-amazon.com/images/I/51WGL9K+AQL._AC_UF894,1000_QL80_.jpg',
-			backPicture: 'back-card.png'
+			backPicture: 'back-card.png',
+			gameState
 		},
 		{
 			id: '4',
 			frontPicture: 'https://www.goatformat.com/uploads/1/1/9/9/119901143/magicianoffaith-sdcl-en-c-1e_orig.png',
-			backPicture: 'back-card.png'
+			backPicture: 'back-card.png',
+			gameState
 		}
 	];
 </script>

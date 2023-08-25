@@ -1,36 +1,34 @@
 <script lang="ts">
-	import type { CardType } from '../types/card.type';
+	import type { PlayableCard } from '../types/playable-card.type';
 
-	let rotation = 0,
-		faceUp = true;
-
-	export let menuItems: { onClick: () => void; displayText: string }[] = [
-			{
-				displayText: 'Defense position',
-				onClick: () => {
-					rotation = 90;
-					faceUp = true;
-				}
-			},
-			{
-				displayText: 'Attack position',
-				onClick: () => {
-					rotation = 0;
-					faceUp = true;
-				}
-			},
-			{
-				displayText: 'Flip position',
-				onClick: () => {
-					rotation = 90;
-					faceUp = false;
-				}
-			}
-		],
-		card: CardType,
+	export let card: PlayableCard,
 		style: string = '';
 
-	$: pictureDisplayed = faceUp ? card.frontPicture : card.backPicture;
+	const menuItems: { onClick: () => void; displayText: string }[] = [
+		{
+			displayText: 'Defense position',
+			onClick: () => {
+				card.gameState.rotation = 90;
+				card.gameState.faceUp = true;
+			}
+		},
+		{
+			displayText: 'Attack position',
+			onClick: () => {
+				card.gameState.rotation = 0;
+				card.gameState.faceUp = true;
+			}
+		},
+		{
+			displayText: 'Flip position',
+			onClick: () => {
+				card.gameState.rotation = 90;
+				card.gameState.faceUp = false;
+			}
+		}
+	];
+	$: pictureDisplayed = card.gameState.faceUp ? card.frontPicture : card.backPicture;
+	$: rotation = card.gameState.rotation;
 	let position = { x: 0, y: 0 };
 	let showMenu = false;
 
@@ -44,19 +42,23 @@
 	}
 </script>
 
-<div
-	style="
+<div style="width: 100%; height: 100%; {style}">
+	<div
+		style="
 		background-image: url({pictureDisplayed});
 		background-size: contain;
 		background-repeat: no-repeat;
 		color: white;
-		transform: rotate({rotation}deg);
-		{style}
+		width: 100%;
+		height: 100%;
+		transform: rotate({card.gameState.rotation}deg) !important;
 	"
-	role="button"
-	tabindex="0"
-	on:contextmenu|preventDefault={rightClickContextMenu}
-/>
+		role="button"
+		tabindex="0"
+		on:contextmenu|preventDefault={rightClickContextMenu}
+	/>
+</div>
+
 {#if showMenu}
 	<nav style="position: fixed; top:{position.y}px; left:{position.x}px; z-index: 1000;">
 		<div class="navbar" id="navbar">

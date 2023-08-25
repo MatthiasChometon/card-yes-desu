@@ -1,8 +1,8 @@
 <script lang="ts">
 	import CardZone from '../components/card-zone.svelte';
-	import type { CardType } from '../types/card.type';
+	import type { PlayableCard } from '../types/playable-card.type';
 
-	export let cards: CardType[],
+	export let cards: PlayableCard[],
 		cardRatio: number,
 		style: string = '';
 </script>

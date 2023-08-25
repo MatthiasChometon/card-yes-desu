@@ -1,4 +1,4 @@
-export interface CardSizeType {
+export interface CardSize {
   width: number;
   height: number;
 }

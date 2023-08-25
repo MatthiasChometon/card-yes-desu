@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { dndzone } from 'svelte-dnd-action';
 	import Card from './card.svelte';
-	import type { CardType } from '../types/card.type';
+	import type { PlayableCard } from '../types/playable-card.type';
 
 	export let style: string = '',
-		cards: CardType[] = [],
+		cards: PlayableCard[] = [],
 		superimposed: boolean = false,
 		cardStyle: string = '';
 
@@ -12,7 +12,7 @@
 		background: 'rgba(0, 0, 0, 0.2)'
 	};
 
-	const handleDrop = (e: { detail: { items: CardType[] } }) => (cards = e.detail.items);
+	const handleDrop = (e: { detail: { items: PlayableCard[] } }) => (cards = e.detail.items);
 
 	function getMarginLeft(index: number): string {
 		return superimposed ? '0' : `${index * 12}px`;

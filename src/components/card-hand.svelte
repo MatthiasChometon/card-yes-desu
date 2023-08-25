@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { CardSizeType } from '../types/card-size.type';
-	import type { CardType } from '../types/card.type';
+	import type { CardSize } from '../types/card-size.type';
+	import type { PlayableCard } from '../types/playable-card.type';
 	import CardZone from './card-zone.svelte';
 
-	export let cards: CardType[],
-		cardSize: CardSizeType,
+	export let cards: PlayableCard[],
+		cardSize: CardSize,
 		boxStyle: string = '',
 		cardZoneBoxStyle: string = '';
 	const { height, width } = cardSize;
