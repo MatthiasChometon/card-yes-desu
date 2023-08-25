@@ -1,10 +1,13 @@
 <script lang="ts">
+	import { ContextMenu } from '../store/context-menu.store';
 	import type { PlayableCard } from '../types/playable-card.type';
+	import ModalGameMenu from './modal-game-menu.svelte';
 
 	export let card: PlayableCard,
 		style: string = '';
 
-	const menuItems: { onClick: () => void; displayText: string }[] = [
+	const contextMenu = ContextMenu();
+	const menuItems = [
 		{
 			displayText: 'Defense position',
 			onClick: () => {
@@ -28,17 +31,6 @@
 		}
 	];
 	$: pictureDisplayed = card.gameState.faceUp ? card.frontPicture : card.backPicture;
-	let position = { x: 0, y: 0 };
-	let showMenu = false;
-
-	function rightClickContextMenu(e: { clientX: number; clientY: number }) {
-		showMenu = true;
-		position.y = e.clientY;
-		position.x = e.clientX;
-	}
-	function onClickOutside() {
-		showMenu = false;
-	}
 </script>
 
 <div style="width: 100%; height: 100%; {style}">
@@ -50,54 +42,16 @@
 		color: white;
 		width: 100%;
 		height: 100%;
-		transform: rotate({card.gameState.rotation}deg) !important;
+		transform: rotate({card.gameState.rotation}deg);
 	"
 		role="button"
 		tabindex="0"
-		on:contextmenu|preventDefault={rightClickContextMenu}
+		on:contextmenu|preventDefault={contextMenu.rightClickContextMenu}
 	/>
 </div>
-
-{#if showMenu}
-	<nav style="position: fixed; top:{position.y}px; left:{position.x}px; z-index: 1000;">
-		<div class="navbar" id="navbar">
-			<ul>
-				{#each menuItems as item}
-					<li><button on:click={item.onClick}><i />{item.displayText}</button></li>
-				{/each}
-			</ul>
-		</div>
-	</nav>
-{/if}
-
-<svelte:window on:click={onClickOutside} />
-
-<style>
-	.navbar {
-		display: inline-flex;
-		border: 1px #999 solid;
-		width: 170px;
-		background-color: #fff;
-		border-radius: 10px;
-		overflow: hidden;
-		flex-direction: column;
-	}
-	.navbar ul {
-		margin: 6px;
-	}
-	ul li button {
-		font-size: 1rem;
-		color: #222;
-		width: 100%;
-		height: 30px;
-		text-align: left;
-		border: 0px;
-		background-color: #fff;
-	}
-	ul li button:hover {
-		color: #000;
-		text-align: left;
-		border-radius: 5px;
-		background-color: #eee;
-	}
-</style>
+<ModalGameMenu
+	onClickOutside={contextMenu.onClickOutside}
+	showMenu={$contextMenu.showMenu}
+	position={$contextMenu.position}
+	{menuItems}
+/>
