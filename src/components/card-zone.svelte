@@ -4,6 +4,8 @@
 	import type { PlayableCard } from '../types/playable-card.type';
 	import type { GameCardState } from '../types/game-card-state.type';
 	import type { ContextMenuCardItem } from '../types/context-menu-card-item.type';
+	import { updateObjectInArrayById } from '../services/updateObjectInArrayById';
+	import { updateSubObject } from '../services/updateSubObject';
 
 	export let style: string = '',
 		cards: PlayableCard[] = [],
@@ -28,11 +30,9 @@
 		return { ...card, gameState: { ...card.gameState, ...gameCardState } };
 	}
 
-	function onCardMenuClick(cardUpdated: PlayableCard): void {
-		cards = cards.map((card) => {
-			if (card.id === cardUpdated.id) return cardUpdated;
-			return card;
-		});
+	function onCardClick(card: PlayableCard, { cardState }: ContextMenuCardItem): void {
+		const cardUpdated = updateSubObject(card, 'gameState', cardState);
+		cards = updateObjectInArrayById(cards, cardUpdated);
 	}
 </script>
 
@@ -44,7 +44,7 @@
 >
 	{#each cards as card, index (card.id)}
 		<Card
-			{onCardMenuClick}
+			{onCardClick}
 			{cardMenuItems}
 			card={getCard(card)}
 			style="position: absolute; height: 100%; width: 100%; margin-left: {getMarginLeft(index)}; {cardStyle}"

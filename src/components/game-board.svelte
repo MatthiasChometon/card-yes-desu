@@ -1,5 +1,6 @@
 <script lang="ts">
 	import CardZone from '../components/card-zone.svelte';
+	import { getContextMenuCardPositionItems } from '../services/get-context-menu-card-position-items';
 	import type { ContextMenuCardItem } from '../types/context-menu-card-item.type';
 	import type { PlayableCard } from '../types/playable-card.type';
 
@@ -7,20 +8,7 @@
 		cardRatio: number,
 		style: string = '';
 
-	let cardMenuItems: ContextMenuCardItem[] = [
-		{
-			displayText: 'Defense position',
-			cardState: { rotation: 90, faceUp: true }
-		},
-		{
-			displayText: 'Attack position',
-			cardState: { rotation: 0, faceUp: true }
-		},
-		{
-			displayText: 'Flip position',
-			cardState: { rotation: 90, faceUp: false }
-		}
-	];
+	let cardMenuItems: ContextMenuCardItem[] = getContextMenuCardPositionItems();
 </script>
 
 <div

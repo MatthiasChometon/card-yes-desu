@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getContextMenuCardPositionItems } from '../services/get-context-menu-card-position-items';
 	import type { CardSize } from '../types/card-size.type';
 	import type { ContextMenuCardItem } from '../types/context-menu-card-item.type';
 	import type { PlayableCard } from '../types/playable-card.type';
@@ -9,24 +10,7 @@
 		boxStyle: string = '',
 		cardZoneBoxStyle: string = '';
 
-	let cardMenuItems: ContextMenuCardItem[] = [
-		{
-			displayText: 'Defense position',
-			cardState: { rotation: 90, faceUp: true }
-		},
-		{
-			displayText: 'Attack position',
-			cardState: { rotation: 0, faceUp: true }
-		},
-		{
-			displayText: 'Flip position',
-			cardState: { rotation: 90, faceUp: false }
-		},
-		{
-			displayText: 'Flip position',
-			cardState: { rotation: 90, faceUp: false }
-		}
-	];
+	let cardMenuItems: ContextMenuCardItem[] = getContextMenuCardPositionItems();
 
 	$: aspectRatio = cardSize.width / cardSize.height;
 </script>
