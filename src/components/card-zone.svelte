@@ -3,11 +3,13 @@
 	import Card from './card.svelte';
 	import type { PlayableCard } from '../types/playable-card.type';
 	import type { GameCardState } from '../types/game-card-state.type';
+	import type { ContextMenuCardItem } from '../types/context-menu-card-item.type';
 
 	export let style: string = '',
 		cards: PlayableCard[] = [],
 		superimposed: boolean = false,
 		gameCardState: GameCardState | null = null,
+		cardMenuItems: ContextMenuCardItem[],
 		cardStyle: string = '';
 
 	let dropTargetStyle = {
@@ -25,6 +27,13 @@
 
 		return { ...card, gameState: { ...card.gameState, ...gameCardState } };
 	}
+
+	function onCardMenuClick(cardUpdated: PlayableCard): void {
+		cards = cards.map((card) => {
+			if (card.id === cardUpdated.id) return cardUpdated;
+			return card;
+		});
+	}
 </script>
 
 <div
@@ -35,6 +44,8 @@
 >
 	{#each cards as card, index (card.id)}
 		<Card
+			{onCardMenuClick}
+			{cardMenuItems}
 			card={getCard(card)}
 			style="position: absolute; height: 100%; width: 100%; margin-left: {getMarginLeft(index)}; {cardStyle}"
 		/>

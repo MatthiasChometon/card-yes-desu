@@ -1,10 +1,26 @@
 <script lang="ts">
 	import CardZone from '../components/card-zone.svelte';
+	import type { ContextMenuCardItem } from '../types/context-menu-card-item.type';
 	import type { PlayableCard } from '../types/playable-card.type';
 
 	export let cards: PlayableCard[],
 		cardRatio: number,
 		style: string = '';
+
+	let cardMenuItems: ContextMenuCardItem[] = [
+		{
+			displayText: 'Defense position',
+			cardState: { rotation: 90, faceUp: true }
+		},
+		{
+			displayText: 'Attack position',
+			cardState: { rotation: 0, faceUp: true }
+		},
+		{
+			displayText: 'Flip position',
+			cardState: { rotation: 90, faceUp: false }
+		}
+	];
 </script>
 
 <div
@@ -17,48 +33,69 @@
 	/>
 	<div style="aspect-ratio: {cardRatio}; height: 100%; display: flex; flex-direction: column;">
 		<div style="flex: 1; display: flex; width: 100%; margin-top: 1.7%;">
-			<CardZone superimposed gameCardState={{ faceUp: false, rotation: 0 }} {cards} style="margin-left: 2.1%;" />
-			<CardZone style="margin-left: 12.2%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.4%;" />
-			<CardZone superimposed gameCardState={{ faceUp: false, rotation: 0 }} style="margin-left: 12.2%;" />
+			<CardZone
+				{cardMenuItems}
+				superimposed
+				gameCardState={{ faceUp: false, rotation: 0 }}
+				{cards}
+				style="margin-left: 2.1%;"
+			/>
+			<CardZone {cardMenuItems} style="margin-left: 12.2%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.4%;" />
+			<CardZone
+				{cardMenuItems}
+				superimposed
+				gameCardState={{ faceUp: false, rotation: 0 }}
+				style="margin-left: 12.2%;"
+			/>
 		</div>
 		<div style="flex: 1; display: flex; width: 100%;">
-			<CardZone superimposed style="margin-left: 2.1%;" />
-			<CardZone superimposed style="margin-left: 1.8%;" />
-			<CardZone style="margin-left: 2.2%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.4%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.4%;" />
-			<CardZone superimposed style="margin-left: 2.5%;" />
-			<CardZone style="margin-left: 1.6%;" />
+			<CardZone {cardMenuItems} superimposed style="margin-left: 2.1%;" />
+			<CardZone {cardMenuItems} superimposed style="margin-left: 1.8%;" />
+			<CardZone {cardMenuItems} style="margin-left: 2.2%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.4%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.4%;" />
+			<CardZone {cardMenuItems} superimposed style="margin-left: 2.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 1.6%;" />
 		</div>
 		<div style="flex: 1; display: flex; width: 100%;">
-			<CardZone style="margin-left: 34.4%; margin-top: 0.2%;" />
-			<CardZone style="margin-left: 15.2%; margin-top: 0.2%;" />
+			<CardZone {cardMenuItems} style="margin-left: 34.4%; margin-top: 0.2%;" />
+			<CardZone {cardMenuItems} style="margin-left: 15.2%; margin-top: 0.2%;" />
 		</div>
 		<div style="flex: 1; display: flex; width: 100%;">
-			<CardZone style="margin-left: 2.3%;" />
-			<CardZone superimposed style="margin-left: 1.6%;" />
-			<CardZone style="margin-left: 2.4%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.4%;" />
-			<CardZone superimposed style="margin-left: 2.4%;" />
-			<CardZone superimposed style="margin-left: 1.6%;" />
+			<CardZone {cardMenuItems} style="margin-left: 2.3%;" />
+			<CardZone {cardMenuItems} superimposed style="margin-left: 1.6%;" />
+			<CardZone {cardMenuItems} style="margin-left: 2.4%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.4%;" />
+			<CardZone {cardMenuItems} superimposed style="margin-left: 2.4%;" />
+			<CardZone {cardMenuItems} superimposed style="margin-left: 1.6%;" />
 		</div>
 		<div style="flex: 1; display: flex; width: 100%; margin-bottom: 1%;">
-			<CardZone superimposed gameCardState={{ faceUp: false, rotation: 0 }} style="margin-left: 2.3%;" />
-			<CardZone style="margin-left: 12.2%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.5%;" />
-			<CardZone style="margin-left: 3.4%;" />
-			<CardZone superimposed gameCardState={{ faceUp: false, rotation: 0 }} style="margin-left: 12.2%;" />
+			<CardZone
+				{cardMenuItems}
+				superimposed
+				gameCardState={{ faceUp: false, rotation: 0 }}
+				style="margin-left: 2.3%;"
+			/>
+			<CardZone {cardMenuItems} style="margin-left: 12.2%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.5%;" />
+			<CardZone {cardMenuItems} style="margin-left: 3.4%;" />
+			<CardZone
+				{cardMenuItems}
+				superimposed
+				gameCardState={{ faceUp: false, rotation: 0 }}
+				style="margin-left: 12.2%;"
+			/>
 		</div>
 	</div>
 </div>

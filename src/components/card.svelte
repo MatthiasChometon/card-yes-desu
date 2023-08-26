@@ -1,35 +1,22 @@
 <script lang="ts">
 	import { ContextMenu } from '../store/context-menu.store';
+	import type { ContextMenuCardItem } from '../types/context-menu-card-item.type';
 	import type { PlayableCard } from '../types/playable-card.type';
 	import ModalGameMenu from './modal-game-menu.svelte';
 
 	export let card: PlayableCard,
-		style: string = '';
+		style: string = '',
+		cardMenuItems: ContextMenuCardItem[],
+		onCardMenuClick: (card: PlayableCard) => void;
 
 	const contextMenu = ContextMenu();
-	const menuItems = [
-		{
-			displayText: 'Defense position',
-			onClick: () => {
-				card.gameState.rotation = 90;
-				card.gameState.faceUp = true;
-			}
-		},
-		{
-			displayText: 'Attack position',
-			onClick: () => {
-				card.gameState.rotation = 0;
-				card.gameState.faceUp = true;
-			}
-		},
-		{
-			displayText: 'Flip position',
-			onClick: () => {
-				card.gameState.rotation = 90;
-				card.gameState.faceUp = false;
-			}
+
+	$: menuItems = cardMenuItems.map((item) => ({
+		...item,
+		onClick: () => {
+			onCardMenuClick({ ...card, gameState: { ...card.gameState, ...item.cardState } });
 		}
-	];
+	}));
 	$: pictureDisplayed = card.gameState.faceUp ? card.frontPicture : card.backPicture;
 </script>
 
