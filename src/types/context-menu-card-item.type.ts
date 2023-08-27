@@ -1,6 +1,9 @@
-import type { GameCardState } from "./game-card-state.type"
+import type { CardFieldZoneType } from "./card-field-zone.type"
+import type { PlayableCard } from "./playable-card.type"
 
 export interface ContextMenuCardItem {
   displayText: string
-  cardState: GameCardState
+  updateCards: ((cards: PlayableCard[], card: PlayableCard) => PlayableCard[]) | null
+  updateCardZones: ((cardZones: PlayableCard[][]) => PlayableCard[][]) | null
+  updateCardFieldZone: ((cardFieldZone: CardFieldZoneType) => CardFieldZoneType) | null
 }

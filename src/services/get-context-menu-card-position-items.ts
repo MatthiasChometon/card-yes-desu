@@ -1,18 +1,33 @@
 import type { ContextMenuCardItem } from "../types/context-menu-card-item.type";
+import type { GameCardState } from "../types/game-card-state.type";
+import type { PlayableCard } from "../types/playable-card.type";
+import { updateObjectInArrayById } from "./updateObjectInArrayById";
+import { updateSubObject } from "./updateSubObject";
+
+function updateGameState (cards: PlayableCard[], card: PlayableCard, newGameState: GameCardState): PlayableCard[] {
+	const newCard = updateSubObject(card, 'gameState', newGameState)
+	return updateObjectInArrayById(cards, newCard);
+}
 
 export function getContextMenuCardPositionItems (): ContextMenuCardItem[] {
 	return [
 		{
-			displayText: 'Defense position',
-			cardState: { rotation: 90, faceUp: true }
+			displayText: 'Attack position',
+			updateCards: (cards: PlayableCard[], card: PlayableCard) => updateGameState(cards, card, { rotation: 0, faceUp: true }),
+			updateCardZones: null,
+			updateCardFieldZone: null
 		},
 		{
-			displayText: 'Attack position',
-			cardState: { rotation: 0, faceUp: true }
+			displayText: 'Defense position',
+			updateCards: (cards: PlayableCard[], card: PlayableCard) => updateGameState(cards, card, { rotation: 90, faceUp: false }),
+			updateCardZones: null,
+			updateCardFieldZone: null
 		},
 		{
 			displayText: 'Flip position',
-			cardState: { rotation: 90, faceUp: false }
+			updateCards: (cards: PlayableCard[], card: PlayableCard) => updateGameState(cards, card, { rotation: 90, faceUp: false }),
+			updateCardZones: null,
+			updateCardFieldZone: null
 		}
 	]
 }

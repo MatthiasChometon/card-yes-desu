@@ -7,14 +7,14 @@
 	export let card: PlayableCard,
 		style: string = '',
 		cardMenuItems: ContextMenuCardItem[],
-		onCardClick: (card: PlayableCard, menuItemClicked: ContextMenuCardItem) => void;
+		onSelectMenuItem: (card: PlayableCard, menuItemClicked: ContextMenuCardItem) => void;
 
 	const contextMenu = ContextMenu();
 
 	$: menuItems = cardMenuItems.map((item) => ({
 		...item,
 		onClick: () => {
-			onCardClick(card, item);
+			onSelectMenuItem(card, item);
 		}
 	}));
 	$: pictureDisplayed = card.gameState.faceUp ? card.frontPicture : card.backPicture;

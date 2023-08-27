@@ -47,7 +47,10 @@
 		const newHand: PlayableCard[][] = cardsExamples.map((card) => {
 			return [card];
 		});
-		fieldCards = { ...fieldCards, ActivePlayer: { ...fieldCards.ActivePlayer, Hand: newHand } };
+		fieldCards = {
+			...fieldCards,
+			ActivePlayer: { ...fieldCards.ActivePlayer, Hand: newHand }
+		};
 	}
 
 	onMount(() => {
@@ -71,9 +74,9 @@
 			boxStyle="flex: 2; align-items: flex-start;"
 			cardZoneBoxStyle="height: 16%;"
 		/>
-		<GameBoard {cardRatio} cardFieldZone={fieldCards} style="flex: 12;" />
+		<GameBoard {cardRatio} bind:cardFieldZone={fieldCards} style="flex: 12;" />
 		<CardHand
-			cards={fieldCards.Opponent.Hand}
+			bind:cards={fieldCards.Opponent.Hand}
 			{cardSize}
 			boxStyle="flex: 2; align-items: flex-end;"
 			cardZoneBoxStyle="height: 16%;"
