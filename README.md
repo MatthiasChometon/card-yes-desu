@@ -1,3 +1,13 @@
+# to do
+
+- hover hand to dnd cards
+- filter hands if zone is empty
+- if more than one card in hand delete last card and create other zone in hand
+
+- shuffle deck
+- draw one or five
+- view deck or extra deck or side deck or banished or graveyard to dnd on board
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
