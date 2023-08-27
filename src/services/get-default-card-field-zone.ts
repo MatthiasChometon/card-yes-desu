@@ -27,9 +27,9 @@ export function getDefaultCardFieldZone (): CardFieldZoneType {
   ]
 
   const cardFieldZone = {
-    [CardZonePlaceType.ActivePlayer]: defaultPlayerCards,
+    [CardZonePlaceType.ActivePlayer]: structuredClone(defaultPlayerCards),
     [CardZonePlaceType.ExtraMonsterZone]: defaultExtraMonsterZone,
-    [CardZonePlaceType.Opponent]: defaultPlayerCards
+    [CardZonePlaceType.Opponent]: structuredClone(defaultPlayerCards)
   };
 
   return cardFieldZone
