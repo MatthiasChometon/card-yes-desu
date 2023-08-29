@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import CardHand from '../components/card-hand.svelte';
 	import GameBoard from '../components/game-board.svelte';
 	import { getDefaultCardFieldZone } from '../services/get-default-card-field-zone';
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
 	import type { CardSize } from '../types/card-size.type';
 	import type { PlayableCard } from '../types/playable-card.type';
+	import CardHandZone from '../components/card-hand-zone.svelte';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
@@ -44,12 +44,9 @@
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
 
 	function setTestCards() {
-		const newHand: PlayableCard[][] = cardsExamples.map((card) => {
-			return [card];
-		});
 		fieldCards = {
 			...fieldCards,
-			ActivePlayer: { ...fieldCards.ActivePlayer, Hand: newHand }
+			ActivePlayer: { ...fieldCards.ActivePlayer, Hand: cardsExamples }
 		};
 	}
 
@@ -68,18 +65,8 @@
 		>
 	</div>
 	<div style="flex: 8; display: flex; justify-content: flex-end; flex-direction: column; position: relative;">
-		<CardHand
-			bind:cards={fieldCards.ActivePlayer.Hand}
-			{cardSize}
-			boxStyle="flex: 2; align-items: flex-start;"
-			cardZoneBoxStyle="height: 16%;"
-		/>
+		<CardHandZone boxStyle="align-items: flex-start;" bind:cards={fieldCards.ActivePlayer.Hand} />
 		<GameBoard {cardRatio} bind:cardFieldZone={fieldCards} style="flex: 12;" />
-		<CardHand
-			bind:cards={fieldCards.Opponent.Hand}
-			{cardSize}
-			boxStyle="flex: 2; align-items: flex-end;"
-			cardZoneBoxStyle="height: 16%;"
-		/>
+		<CardHandZone boxStyle="align-items: flex-end;" bind:cards={fieldCards.Opponent.Hand} />
 	</div>
 </div>

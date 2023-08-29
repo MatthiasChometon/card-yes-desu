@@ -6,8 +6,7 @@ export function getContextMenuCardShuffleItems (): ContextMenuCardItem[] {
 	return [
 		{
 			displayText: 'Shuffle Hand',
-			updateCards: null,
-			updateCardZones: (cards: PlayableCard[][]) => shuffleCards(cards),
+			updateCards: (cards: PlayableCard[]) => shuffleCards(cards),
 			updateCardFieldZone: null
 		},
 	]

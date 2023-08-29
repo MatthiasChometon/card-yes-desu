@@ -1,8 +1,8 @@
 # to do
 
-- hover hand to dnd cards
-- filter hands if zone is empty
-- if more than one card in hand delete last card and create other zone in hand
+- hover hand to dnd cards ✅
+- filter hands if zone is empty ✅
+- if more than one card in hand delete last card and create other zone in hand ✅
 
 - shuffle deck
 - draw one or five

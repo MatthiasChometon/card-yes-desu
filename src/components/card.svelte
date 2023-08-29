@@ -7,7 +7,7 @@
 	export let card: PlayableCard,
 		style: string = '',
 		cardMenuItems: ContextMenuCardItem[],
-		onSelectMenuItem: (card: PlayableCard, menuItemClicked: ContextMenuCardItem) => void;
+		onSelectMenuItem: (card: PlayableCard, menuItemClicked: ContextMenuCardItem) => void = () => {};
 
 	const contextMenu = ContextMenu();
 
@@ -26,6 +26,7 @@
 		background-image: url({pictureDisplayed});
 		background-size: contain;
 		background-repeat: no-repeat;
+		background-position: center;
 		color: white;
 		width: 100%;
 		height: 100%;

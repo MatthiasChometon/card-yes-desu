@@ -14,19 +14,16 @@ export function getContextMenuCardPositionItems (): ContextMenuCardItem[] {
 		{
 			displayText: 'Attack position',
 			updateCards: (cards: PlayableCard[], card: PlayableCard) => updateGameState(cards, card, { rotation: 0, faceUp: true }),
-			updateCardZones: null,
 			updateCardFieldZone: null
 		},
 		{
 			displayText: 'Defense position',
 			updateCards: (cards: PlayableCard[], card: PlayableCard) => updateGameState(cards, card, { rotation: 90, faceUp: false }),
-			updateCardZones: null,
 			updateCardFieldZone: null
 		},
 		{
 			displayText: 'Flip position',
 			updateCards: (cards: PlayableCard[], card: PlayableCard) => updateGameState(cards, card, { rotation: 90, faceUp: false }),
-			updateCardZones: null,
 			updateCardFieldZone: null
 		}
 	]

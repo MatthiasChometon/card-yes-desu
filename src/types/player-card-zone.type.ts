@@ -4,7 +4,7 @@ import type { PlayableCard } from "./playable-card.type";
 type FiveElementArray<T> = [T, T, T, T, T];
 
 export interface PlayerCardZoneType {
-  [CardZoneType.Hand]: Array<PlayableCard[]>,
+  [CardZoneType.Hand]: PlayableCard[],
   [CardZoneType.Deck]: PlayableCard[],
   [CardZoneType.ExtraDeck]: PlayableCard[],
   [CardZoneType.MonsterField]: FiveElementArray<PlayableCard[]>,
