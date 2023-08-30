@@ -3,17 +3,23 @@
 	import Card from './card.svelte';
 	import type { PlayableCard } from '../types/playable-card.type';
 	import type { GameCardState } from '../types/game-card-state.type';
-	import type { ContextMenuCardItem } from '../types/context-menu-card-item.type';
 	import { updateSubObject } from '../services/updateSubObject';
 	import type { DragAndDropHoverOrDropEvent } from '../types/drag-and-drop-hover-or-drop-event';
+	import ModalGameMenu from './modal-game-menu.svelte';
+	import { ContextMenu } from '../store/context-menu.store';
+	import type { ContextMenuItem } from '../types/context-menu-item.type';
+	import { getContextMenuCardPositionItems } from '../services/get-context-menu-card-position-items';
+	import { updateGameState } from '../services/update-game-state';
+	import type { ClientPosition } from '../types/client-position';
+	import { shuffle } from '../services/shuffle-cards';
 
 	export let style: string = '',
 		cards: PlayableCard[] = [],
 		superimposed: boolean = false,
 		gameCardState: GameCardState | null = null,
-		cardMenuItems: ContextMenuCardItem[],
 		cardStyle: string = '',
-		onSelectMenuItem: (card: PlayableCard, item: ContextMenuCardItem) => void = () => {};
+		canChangePosition: boolean = true,
+		canShuffle: boolean = false;
 
 	let dropTargetStyle = { background: 'rgba(0, 0, 0, 0.2)' };
 
@@ -21,6 +27,37 @@
 	const getMarginLeft = (index: number): string => (superimposed ? '0' : `${index * 12}px`);
 	const getCard = (card: PlayableCard): PlayableCard =>
 		gameCardState === null ? card : updateSubObject(card, 'gameState', gameCardState);
+
+	const contextMenu = ContextMenu();
+	let cardClicked: PlayableCard | null = null;
+
+	function onRightClick({ clientX, clientY }: ClientPosition, card: PlayableCard): void {
+		contextMenu.rightClickContextMenu({ clientX, clientY });
+		cardClicked = card;
+	}
+
+	function getMenuItems(): ContextMenuItem[] {
+		const menuItemsWithChangePositions = canChangePosition
+			? getContextMenuCardPositionItems().map(({ displayText, newPosition }) => ({
+					displayText,
+					onClick: () => {
+						if (cardClicked === null) return;
+						cards = updateGameState(cards, cardClicked, newPosition);
+					}
+			  }))
+			: [];
+		const menuWithShuffleDeck = canShuffle
+			? [
+					{
+						displayText: 'Shuffle deck',
+						onClick: () => {
+							cards = shuffle(cards);
+						}
+					}
+			  ]
+			: [];
+		return [...menuItemsWithChangePositions, ...menuWithShuffleDeck];
+	}
 </script>
 
 <div
@@ -31,14 +68,17 @@
 >
 	{#each cards as card, index (card.id)}
 		<Card
-			onSelectMenuItem={(card, item) => {
-				const { updateCards } = item;
-				if (updateCards !== null) cards = updateCards(cards, card);
-				onSelectMenuItem(card, item);
+			onRightClick={(event) => {
+				onRightClick(event, card);
 			}}
-			{cardMenuItems}
 			card={getCard(card)}
 			style="position: absolute; height: 100%; width: 100%; margin-left: {getMarginLeft(index)}; {cardStyle}"
 		/>
 	{/each}
 </div>
+<ModalGameMenu
+	onClickOutside={contextMenu.onClickOutside}
+	showMenu={$contextMenu.showMenu}
+	position={$contextMenu.position}
+	menuItems={getMenuItems()}
+/>

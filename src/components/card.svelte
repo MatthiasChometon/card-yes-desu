@@ -1,22 +1,15 @@
 <script lang="ts">
+	import { updateSubObject } from '../services/updateSubObject';
 	import { ContextMenu } from '../store/context-menu.store';
-	import type { ContextMenuCardItem } from '../types/context-menu-card-item.type';
+	import type { ClientPosition } from '../types/client-position';
+	import type { ContextMenuItem } from '../types/context-menu-item.type';
 	import type { PlayableCard } from '../types/playable-card.type';
 	import ModalGameMenu from './modal-game-menu.svelte';
 
 	export let card: PlayableCard,
 		style: string = '',
-		cardMenuItems: ContextMenuCardItem[],
-		onSelectMenuItem: (card: PlayableCard, menuItemClicked: ContextMenuCardItem) => void = () => {};
+		onRightClick: ({ clientX, clientY }: ClientPosition) => void;
 
-	const contextMenu = ContextMenu();
-
-	$: menuItems = cardMenuItems.map((item) => ({
-		...item,
-		onClick: () => {
-			onSelectMenuItem(card, item);
-		}
-	}));
 	$: pictureDisplayed = card.gameState.faceUp ? card.frontPicture : card.backPicture;
 </script>
 
@@ -34,12 +27,6 @@
 	"
 		role="button"
 		tabindex="0"
-		on:contextmenu|preventDefault={contextMenu.rightClickContextMenu}
+		on:contextmenu|preventDefault={onRightClick}
 	/>
 </div>
-<ModalGameMenu
-	onClickOutside={contextMenu.onClickOutside}
-	showMenu={$contextMenu.showMenu}
-	position={$contextMenu.position}
-	{menuItems}
-/>

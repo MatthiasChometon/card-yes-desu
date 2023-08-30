@@ -7,7 +7,7 @@
 		position: { x: number; y: number };
 </script>
 
-{#if showMenu}
+{#if showMenu && menuItems.length > 0}
 	<nav style="position: fixed; top:{position.y}px; left:{position.x}px; z-index: 1000;">
 		<div class="navbar">
 			<ul>
