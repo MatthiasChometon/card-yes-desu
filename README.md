@@ -5,8 +5,7 @@
 - if more than one card in hand delete last card and create other zone in hand ✅
 - shuffle deck ✅
 - draw one or five ✅
-
-- view deck or extra deck or side deck or banished or graveyard to dnd on board
+- view deck or extra deck or side deck or banished or graveyard to dnd on board ✅
 
 # create-svelte
 
