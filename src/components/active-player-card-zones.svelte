@@ -1,17 +1,19 @@
 <script lang="ts">
 	import CardZone from './card-zone.svelte';
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
+	import type { ContextMenuItem } from '../types/context-menu-item.type';
 
-	export let cardFieldZone: CardFieldZoneType;
+	export let cardFieldZone: CardFieldZoneType, deckMenuItems: ContextMenuItem[];
 </script>
 
 <div style="flex: 1; display: flex; width: 100%; margin-top: 1.7%;">
 	<CardZone
+		menuItems={deckMenuItems}
 		canChangePosition={false}
 		bind:cards={cardFieldZone.ActivePlayer.Deck}
 		superimposed
 		canShuffle
-		gameCardState={{ faceUp: true, rotation: 0 }}
+		gameCardState={{ faceUp: false, rotation: 0 }}
 		style="margin-left: 2.1%;"
 	/>
 	<CardZone bind:cards={cardFieldZone.ActivePlayer.SpellTrapZone[0]} style="margin-left: 12.2%;" />

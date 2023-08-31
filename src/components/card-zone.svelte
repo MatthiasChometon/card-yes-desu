@@ -19,7 +19,8 @@
 		gameCardState: GameCardState | null = null,
 		cardStyle: string = '',
 		canChangePosition: boolean = true,
-		canShuffle: boolean = false;
+		canShuffle: boolean = false,
+		menuItems: ContextMenuItem[] = [];
 
 	let dropTargetStyle = { background: 'rgba(0, 0, 0, 0.2)' };
 
@@ -56,7 +57,7 @@
 					}
 			  ]
 			: [];
-		return [...menuItemsWithChangePositions, ...menuWithShuffleDeck];
+		return [...menuItemsWithChangePositions, ...menuWithShuffleDeck, ...menuItems];
 	}
 </script>
 

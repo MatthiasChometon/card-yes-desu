@@ -6,6 +6,7 @@
 	import type { CardSize } from '../types/card-size.type';
 	import type { PlayableCard } from '../types/playable-card.type';
 	import CardHandZone from '../components/card-hand-zone.svelte';
+	import type { ContextMenuItem } from '../types/context-menu-item.type';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;

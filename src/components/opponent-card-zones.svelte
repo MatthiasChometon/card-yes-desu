@@ -1,8 +1,9 @@
 <script lang="ts">
 	import CardZone from '../components/card-zone.svelte';
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
+	import type { ContextMenuItem } from '../types/context-menu-item.type';
 
-	export let cardFieldZone: CardFieldZoneType;
+	export let cardFieldZone: CardFieldZoneType, deckMenuItems: ContextMenuItem[];
 </script>
 
 <div style="flex: 1; display: flex; width: 100%;">
@@ -54,6 +55,7 @@
 		superimposed
 		canShuffle
 		canChangePosition={false}
+		menuItems={deckMenuItems}
 		gameCardState={{ faceUp: false, rotation: 0 }}
 		style="margin-left: 12.2%;"
 	/>
