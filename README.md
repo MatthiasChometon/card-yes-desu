@@ -7,6 +7,11 @@
 - draw one or five ✅
 - view deck or extra deck or side deck or banished or graveyard to dnd on board ✅
 
+- can close menu when select
+- refactor card-list-modal
+- can create deck and use it in game
+- import from api all cards
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
