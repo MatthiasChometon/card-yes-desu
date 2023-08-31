@@ -14,7 +14,11 @@ export function getContextMenuCardPositionItems (): Array<{
 			newPosition: { rotation: 90, faceUp: true }
 		},
 		{
-			displayText: 'Flip position',
+			displayText: 'Attack Flip position',
+			newPosition: { rotation: 0, faceUp: false }
+		},
+		{
+			displayText: 'Defense Flip position',
 			newPosition: { rotation: 90, faceUp: false }
 		}
 	]

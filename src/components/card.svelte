@@ -1,14 +1,11 @@
 <script lang="ts">
-	import { updateSubObject } from '../services/updateSubObject';
-	import { ContextMenu } from '../store/context-menu.store';
 	import type { ClientPosition } from '../types/client-position';
-	import type { ContextMenuItem } from '../types/context-menu-item.type';
 	import type { PlayableCard } from '../types/playable-card.type';
-	import ModalGameMenu from './modal-game-menu.svelte';
 
 	export let card: PlayableCard,
 		style: string = '',
-		onRightClick: ({ clientX, clientY }: ClientPosition) => void;
+		pictureStyle: string = '',
+		onRightClick: ({ clientX, clientY }: ClientPosition) => void = () => {};
 
 	$: pictureDisplayed = card.gameState.faceUp ? card.frontPicture : card.backPicture;
 </script>
@@ -24,6 +21,7 @@
 		width: 100%;
 		height: 100%;
 		transform: rotate({card.gameState.rotation}deg);
+		{pictureStyle}
 	"
 		role="button"
 		tabindex="0"

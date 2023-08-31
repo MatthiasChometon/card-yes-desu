@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { clickOutside } from '../services/click-outside';
 	import type { ContextMenuItem } from '../types/context-menu-item.type';
 
 	export let menuItems: ContextMenuItem[],
@@ -8,7 +9,13 @@
 </script>
 
 {#if showMenu && menuItems.length > 0}
-	<nav style="position: fixed; top:{position.y}px; left:{position.x}px; z-index: 1000;">
+	<nav
+		style="position: fixed; top:{position.y}px; left:{position.x}px; z-index: 1000;"
+		use:clickOutside
+		on:outsideClick={() => {
+			onClickOutside();
+		}}
+	>
 		<div class="navbar">
 			<ul>
 				{#each menuItems as item}
@@ -18,8 +25,6 @@
 		</div>
 	</nav>
 {/if}
-
-<svelte:window on:click={onClickOutside} />
 
 <style>
 	.navbar {

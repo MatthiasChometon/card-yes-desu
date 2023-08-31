@@ -12,6 +12,7 @@
 	import { updateGameState } from '../services/update-game-state';
 	import type { ClientPosition } from '../types/client-position';
 	import { shuffle } from '../services/shuffle-cards';
+	import CardListModal from './card-list-modal.svelte';
 
 	export let style: string = '',
 		cards: PlayableCard[] = [],
@@ -31,6 +32,7 @@
 
 	const contextMenu = ContextMenu();
 	let cardClicked: PlayableCard | null = null;
+	let showCardListModal: boolean = false;
 
 	function onRightClick({ clientX, clientY }: ClientPosition, card: PlayableCard): void {
 		contextMenu.rightClickContextMenu({ clientX, clientY });
@@ -66,6 +68,11 @@
 	use:dndzone={{ items: cards, flipDurationMs: 150, dropTargetStyle }}
 	on:consider={handleDrop}
 	on:finalize={handleDrop}
+	on:dblclick={() => {
+		showCardListModal = true;
+	}}
+	role="button"
+	tabindex="0"
 >
 	{#each cards as card, index (card.id)}
 		<Card
@@ -83,3 +90,6 @@
 	position={$contextMenu.position}
 	menuItems={getMenuItems()}
 />
+{#if showCardListModal}
+	<CardListModal bind:cards bind:showCardListModal />
+{/if}
