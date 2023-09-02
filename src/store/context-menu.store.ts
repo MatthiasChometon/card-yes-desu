@@ -11,7 +11,7 @@ export const ContextMenu = () => {
 		rightClickContextMenu: ({ clientX, clientY }: { clientX: number; clientY: number }) => {
 			set({ showMenu: true, position: { x: clientX, y: clientY } });
 		},
-		onClickOutside: () => {
+		onClose: () => {
 			update(state => ({ ...state, showMenu: false }));
 		},
 	};

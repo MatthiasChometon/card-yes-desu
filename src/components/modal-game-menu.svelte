@@ -2,10 +2,7 @@
 	import { clickOutside } from '../services/click-outside';
 	import type { ContextMenuItem } from '../types/context-menu-item.type';
 
-	export let menuItems: ContextMenuItem[],
-		onClickOutside: () => void,
-		showMenu: boolean,
-		position: { x: number; y: number };
+	export let menuItems: ContextMenuItem[], onClose: () => void, showMenu: boolean, position: { x: number; y: number };
 </script>
 
 {#if showMenu && menuItems.length > 0}
@@ -13,7 +10,7 @@
 		style="position: fixed; top:{position.y}px; left:{position.x}px; z-index: 1000;"
 		use:clickOutside
 		on:outsideClick={() => {
-			onClickOutside();
+			onClose();
 		}}
 	>
 		<div class="navbar">
@@ -23,7 +20,7 @@
 						<button
 							on:click={() => {
 								item.onClick();
-								onClickOutside();
+								onClose();
 							}}><i />{item.displayText}</button
 						>
 					</li>

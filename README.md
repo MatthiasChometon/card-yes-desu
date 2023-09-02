@@ -6,8 +6,8 @@
 - shuffle deck ✅
 - draw one or five ✅
 - view deck or extra deck or side deck or banished or graveyard to dnd on board ✅
+- can close menu when select ✅
 
-- can close menu when select
 - refactor card-list-modal
 - can create deck and use it in game
 - import from api all cards

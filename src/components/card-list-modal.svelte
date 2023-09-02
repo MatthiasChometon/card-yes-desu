@@ -49,7 +49,6 @@
 		on:consider={handleDrop}
 		on:finalize={handleDrop}
 		on:outsideClick={() => {
-			if ($contextMenu.showMenu === true) return;
 			showCardListModal = false;
 		}}
 		role="button"
@@ -66,11 +65,13 @@
 				pictureStyle="aspect-ratio: 0.7; height: auto;"
 			/>
 		{/each}
+		<ModalGameMenu
+			onClose={() => {
+				contextMenu.onClose();
+			}}
+			showMenu={$contextMenu.showMenu}
+			position={$contextMenu.position}
+			menuItems={getMenuItems()}
+		/>
 	</div>
-	<ModalGameMenu
-		onClickOutside={contextMenu.onClickOutside}
-		showMenu={$contextMenu.showMenu}
-		position={$contextMenu.position}
-		menuItems={getMenuItems()}
-	/>
 </div>

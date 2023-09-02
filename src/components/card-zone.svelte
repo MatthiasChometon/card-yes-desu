@@ -85,7 +85,7 @@
 	{/each}
 </div>
 <ModalGameMenu
-	onClickOutside={contextMenu.onClickOutside}
+	onClose={contextMenu.onClose}
 	showMenu={$contextMenu.showMenu}
 	position={$contextMenu.position}
 	menuItems={getMenuItems()}
