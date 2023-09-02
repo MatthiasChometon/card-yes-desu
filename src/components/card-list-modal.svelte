@@ -65,13 +65,13 @@
 				pictureStyle="aspect-ratio: 0.7; height: auto;"
 			/>
 		{/each}
-		<ModalGameMenu
-			onClose={() => {
-				contextMenu.onClose();
-			}}
-			showMenu={$contextMenu.showMenu}
-			position={$contextMenu.position}
-			menuItems={getMenuItems()}
-		/>
 	</div>
+	<ModalGameMenu
+		onClose={() => {
+			contextMenu.onClose();
+		}}
+		showMenu={$contextMenu.showMenu}
+		position={$contextMenu.position}
+		menuItems={getMenuItems()}
+	/>
 </div>

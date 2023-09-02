@@ -1,0 +1,36 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14 # Adjust the Node.js version as needed
+
+      - name: Install dependencies
+        run: |
+          npm install -g pnpm
+          pnpm install
+        working-directory: ./your-svelte-app-folder # Adjust to your Svelte app's folder structure
+
+      - name: Build Svelte app
+        run: |
+          pnpm run build
+        working-directory: ./your-svelte-app-folder # Adjust to your Svelte app's folder structure
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./your-svelte-app-folder/build # Adjust to your Svelte app's build output folder
