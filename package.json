@@ -35,6 +35,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"peerjs": "^1.4.7",
 		"svelte-dnd-action": "^0.9.24"
 	}
 }

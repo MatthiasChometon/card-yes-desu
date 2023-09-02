@@ -3,6 +3,7 @@
 	import { getDefaultCardFieldZone } from '../services/get-default-card-field-zone';
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
 	import type { PlayableCard } from '../types/playable-card.type';
+	import ConnectPlayersOnline from './connect-players-online.svelte';
 
 	export let style = '',
 		fieldCards: CardFieldZoneType;
@@ -77,4 +78,5 @@
 			setTestCards();
 		}}>Reset</button
 	>
+	<ConnectPlayersOnline bind:fieldCards />
 </div>
