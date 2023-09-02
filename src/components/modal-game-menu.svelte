@@ -19,7 +19,14 @@
 		<div class="navbar">
 			<ul>
 				{#each menuItems as item}
-					<li><button on:click={item.onClick}><i />{item.displayText}</button></li>
+					<li>
+						<button
+							on:click={() => {
+								item.onClick();
+								onClickOutside();
+							}}><i />{item.displayText}</button
+						>
+					</li>
 				{/each}
 			</ul>
 		</div>

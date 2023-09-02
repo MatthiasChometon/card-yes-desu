@@ -1,6 +1,6 @@
 <script lang="ts">
-	import CardZone from './card-zone.svelte';
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
+	import CardZone from './card-zone.svelte';
 
 	export let cardFieldZone: CardFieldZoneType;
 </script>

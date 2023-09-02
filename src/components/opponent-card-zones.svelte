@@ -1,7 +1,7 @@
 <script lang="ts">
-	import CardZone from '../components/card-zone.svelte';
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
 	import type { ContextMenuItem } from '../types/context-menu-item.type';
+	import CardZone from './card-zone.svelte';
 
 	export let cardFieldZone: CardFieldZoneType, deckMenuItems: ContextMenuItem[];
 </script>

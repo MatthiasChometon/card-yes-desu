@@ -1,17 +1,15 @@
 <script lang="ts">
 	import { dndzone } from 'svelte-dnd-action';
 	import type { PlayableCard } from '../types/playable-card.type';
+	import type { ClientPosition } from '../types/client-position';
 	import type { DragAndDropHoverOrDropEvent } from '../types/drag-and-drop-hover-or-drop-event';
-	import Card from './card.svelte';
-	import type { ContextMenuItem } from '../types/context-menu-item.type';
 	import { ContextMenu } from '../store/context-menu.store';
-	import ModalGameMenu from './modal-game-menu.svelte';
-	import { updateSubObject } from '../services/updateSubObject';
-	import { updateObjectInArrayById } from '../services/updateObjectInArrayById';
+	import type { ContextMenuItem } from '../types/context-menu-item.type';
+	import { shuffle } from '../services/shuffle-cards';
 	import { getContextMenuCardPositionItems } from '../services/get-context-menu-card-position-items';
 	import { updateGameState } from '../services/update-game-state';
-	import type { ClientPosition } from '../types/client-position';
-	import { shuffle } from '../services/shuffle-cards';
+	import Card from './card.svelte';
+	import ModalGameMenu from './modal-game-menu.svelte';
 
 	export let cards: PlayableCard[] = [],
 		boxStyle: string = '';
