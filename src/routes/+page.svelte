@@ -1,17 +1,27 @@
 <script lang="ts">
-	import GameInformation from '../components/game-information.svelte';
-	import GameZones from '../components/game-zones.svelte';
-	import { getDefaultCardFieldZone } from '../services/get-default-card-field-zone';
-	import type { CardFieldZoneType } from '../types/card-field-zone.type';
-	import type { CardSize } from '../types/card-size.type';
+	import { onMount } from 'svelte';
+	import type { Peerjs } from '../types/Peerjs.type';
 
-	const cardSize: CardSize = { height: 13.6, width: 9 };
-	const cardRatio: number = cardSize.height / cardSize.width;
+	let peer: Peerjs['Peer']['prototype'];
+	let connection: Peerjs['DataConnection']['prototype'];
+	let connectId: string;
 
-	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
+	onMount(async () => {
+		const peerjs: Peerjs = await import('peerjs');
+		peer = new peerjs.Peer();
+
+		peer.on('open', function (id) {
+			console.log('My peer ID is: ' + id);
+		});
+	});
+
+	function connect() {
+		connection = peer.connect(connectId);
+		// connection.on('open', function () {
+		// 	connection.send('hi!');
+		// });
+	}
 </script>
 
-<div style="height: 100vh; width: 100vw; display: flex; justify-content: flex-end;">
-	<GameInformation style="flex: 6;" bind:fieldCards />
-	<GameZones aspectRatio={cardRatio} style="flex: 8; " bind:fieldCards />
-</div>
+<input type="text" bind:value={connectId} />
+<button on:click={connect}>Connect</button>
