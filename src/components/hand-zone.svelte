@@ -10,9 +10,11 @@
 	import { updateGameState } from '../services/update-game-state';
 	import Card from './card.svelte';
 	import ModalGameMenu from './modal-game-menu.svelte';
+	import { DragEvent } from '../enums/drag-event';
 
 	export let cards: PlayableCard[] = [],
-		boxStyle: string = '';
+		boxStyle: string = '',
+		onCardDrop: () => void = () => {};
 
 	let cardClicked: PlayableCard | null = null;
 
@@ -21,8 +23,21 @@
 		cardClicked = card;
 	}
 
-	const handleDrop = ({ detail: { items } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
+	const handleConsider = ({ detail: { items } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
 		cards = items;
+	};
+
+	const handleDrop = ({
+		detail: {
+			items,
+			info: { trigger }
+		}
+	}: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
+		cards = items;
+
+		if (trigger === DragEvent.droppedIntoAnother) {
+			onCardDrop();
+		}
 	};
 
 	const contextMenu = ContextMenu();
@@ -47,7 +62,7 @@
 	<div
 		style="width: 100%; height: 20%; display: flex; justify-content: center; position: absolute;"
 		use:dndzone={{ items: cards, flipDurationMs: 150, dropTargetStyle: { background: 'rgba(0, 0, 0, 0.2)' } }}
-		on:consider={handleDrop}
+		on:consider={handleConsider}
 		on:finalize={handleDrop}
 	>
 		{#each cards as card (card.id)}

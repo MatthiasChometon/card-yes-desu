@@ -9,7 +9,8 @@
 
 	export let cardFieldZone: CardFieldZoneType,
 		aspectRatio: number,
-		style: string = '';
+		style: string = '',
+		onCardDrop: () => void = () => {};
 
 	const drawOneCardDisplayText = 'Draw one card';
 	const drawFiveCardsDisplayText = 'Draw five cards';
@@ -53,8 +54,8 @@
 		alt="yugioh field"
 	/>
 	<div style="aspect-ratio: {aspectRatio}; height: 100%; display: flex; flex-direction: column;">
-		<ActivePlayerCardZones deckMenuItems={activePlayerDeckMenuItems} bind:cardFieldZone />
-		<ExtraMonsterZones bind:cardFieldZone />
-		<OpponentCardZones deckMenuItems={opponentDeckMenuItems} bind:cardFieldZone />
+		<ActivePlayerCardZones deckMenuItems={activePlayerDeckMenuItems} bind:cardFieldZone {onCardDrop} />
+		<ExtraMonsterZones bind:cardFieldZone {onCardDrop} />
+		<OpponentCardZones deckMenuItems={opponentDeckMenuItems} bind:cardFieldZone {onCardDrop} />
 	</div>
 </div>

@@ -20,6 +20,11 @@
 	onMount(async () => {
 		await playersConnection.createNewGame();
 	});
+
+	function onCardDrop() {
+		console.log('dropped');
+		playersConnection.sendData(fieldCards);
+	}
 </script>
 
 <div style="height: 100vh; width: 100vw; display: flex; justify-content: flex-end;">
@@ -29,5 +34,5 @@
 		style="flex: 6;"
 		bind:fieldCards
 	/>
-	<GameZones aspectRatio={cardRatio} style="flex: 8; " bind:fieldCards />
+	<GameZones aspectRatio={cardRatio} style="flex: 8; " bind:fieldCards {onCardDrop} />
 </div>

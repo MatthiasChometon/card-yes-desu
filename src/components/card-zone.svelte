@@ -13,6 +13,7 @@
 	import type { ClientPosition } from '../types/client-position';
 	import { shuffle } from '../services/shuffle-cards';
 	import CardListModal from './card-list-modal.svelte';
+	import { DragEvent } from '../enums/drag-event';
 
 	export let style: string = '',
 		cards: PlayableCard[] = [],
@@ -21,11 +22,11 @@
 		cardStyle: string = '',
 		canChangePosition: boolean = true,
 		canShuffle: boolean = false,
-		menuItems: ContextMenuItem[] = [];
+		menuItems: ContextMenuItem[] = [],
+		onCardDrop: () => void;
 
 	let dropTargetStyle = { background: 'rgba(0, 0, 0, 0.2)' };
 
-	const handleDrop = ({ detail: { items } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => (cards = items);
 	const getMarginLeft = (index: number): string => (superimposed ? '0' : `${index * 12}px`);
 	const getCard = (card: PlayableCard): PlayableCard =>
 		gameCardState === null ? card : updateSubObject(card, 'gameState', gameCardState);
@@ -61,13 +62,29 @@
 			: [];
 		return [...menuItemsWithChangePositions, ...menuWithShuffleDeck, ...menuItems];
 	}
+
+	const handleConsider = ({ detail: { items } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
+		cards = items;
+	};
+
+	const handleDrop = ({
+		detail: {
+			items,
+			info: { trigger }
+		}
+	}: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
+		cards = items;
+		if (trigger === DragEvent.droppedIntoAnother) {
+			onCardDrop();
+		}
+	};
 </script>
 
 <div
 	style="width: 8.2%; height: 95%; display: flex; position: relative; {style}"
 	use:dndzone={{ items: cards, flipDurationMs: 150, dropTargetStyle }}
 	on:consider={handleDrop}
-	on:finalize={handleDrop}
+	on:finalize={handleConsider}
 	on:dblclick={() => {
 		showCardListModal = true;
 	}}
