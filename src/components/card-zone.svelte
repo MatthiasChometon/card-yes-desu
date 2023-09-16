@@ -13,7 +13,7 @@
 	import type { ClientPosition } from '../types/client-position';
 	import { shuffle } from '../services/shuffle-cards';
 	import CardListModal from './card-list-modal.svelte';
-	import { onMoveToOnDrop } from '../services/on-move-to-on-drop';
+	import { DragEvent } from '../enums/drag-event';
 
 	export let style: string = '',
 		cards: PlayableCard[] = [],
@@ -63,26 +63,21 @@
 		return [...menuItemsWithChangePositions, ...menuWithShuffleDeck, ...menuItems];
 	}
 
-	const handleConsider = ({ detail: { items } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
+	const handleConsider = ({ detail: { items, info } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
 		cards = items;
 	};
 
-	const handleDrop = ({
-		detail: {
-			items,
-			info: { trigger }
-		}
-	}: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
+	const handleFinalize = ({ detail: { items } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
 		cards = items;
-		onMoveToOnDrop(trigger, onCardDrop);
+		onCardDrop();
 	};
 </script>
 
 <div
 	style="width: 8.2%; height: 95%; display: flex; position: relative; {style}"
 	use:dndzone={{ items: cards, flipDurationMs: 150, dropTargetStyle }}
-	on:consider={handleDrop}
-	on:finalize={handleConsider}
+	on:consider={handleConsider}
+	on:finalize={handleFinalize}
 	on:dblclick={() => {
 		showCardListModal = true;
 	}}
