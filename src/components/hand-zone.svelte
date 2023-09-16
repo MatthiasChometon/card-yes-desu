@@ -7,13 +7,15 @@
 	export let cards: PlayableCard[] = [],
 		boxStyle: string = '',
 		onCardDrop: () => void,
-		onCardChangingPosition: () => void;
+		onCardChangingPosition: () => void,
+		onShuffleCard: () => void;
 
 	const menuItems: ContextMenuItem[] = [
 		{
 			displayText: 'Shuffle hand',
 			onClick: () => {
 				cards = shuffle(cards);
+				onShuffleCard();
 			}
 		}
 	];

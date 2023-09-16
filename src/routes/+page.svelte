@@ -32,6 +32,11 @@
 		console.log('change position');
 		playersConnection.sendData(fieldCards);
 	}
+
+	function onShuffleCard() {
+		console.log('change position');
+		playersConnection.sendData(fieldCards);
+	}
 </script>
 
 <div style="height: 100vh; width: 100vw; display: flex; justify-content: flex-end;">
@@ -43,6 +48,7 @@
 	/>
 	{#if $playersConnection.isHost !== null}
 		<GameZones
+			{onShuffleCard}
 			opponentCardZonePlaceType={!$playersConnection.isHost
 				? CardZonePlaceType.HostPlayer
 				: CardZonePlaceType.InvitedPlayer}
