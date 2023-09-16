@@ -12,6 +12,8 @@
 		style: string = '',
 		onCardDrop: () => void,
 		onCardChangingPosition: () => void,
+		onCardDraw: () => void,
+		onShuffleDeck: () => void,
 		opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer,
 		activePlayerCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer,
 		extraMonsterZonesLeftZoneIndex: 0 | 1,
@@ -25,12 +27,14 @@
 				displayText: 'Draw one card',
 				onClick: () => {
 					cardFieldZone = drawCards(cardFieldZone, 1, cardZonePlaceType);
+					onCardDraw();
 				}
 			},
 			{
 				displayText: 'Draw five cards',
 				onClick: () => {
 					cardFieldZone = drawCards(cardFieldZone, 5, cardZonePlaceType);
+					onCardDraw();
 				}
 			}
 		];
@@ -47,6 +51,7 @@
 	/>
 	<div style="aspect-ratio: {aspectRatio}; height: 100%; display: flex; flex-direction: column;">
 		<OpponentCardZones
+			{onShuffleDeck}
 			cardZonePlaceType={opponentCardZonePlaceType}
 			{onCardChangingPosition}
 			deckMenuItems={getActivePlayerDeckMenuItems(opponentCardZonePlaceType)}
@@ -61,6 +66,7 @@
 			{onCardDrop}
 		/>
 		<ActivePlayerCardZones
+			{onShuffleDeck}
 			cardZonePlaceType={activePlayerCardZonePlaceType}
 			{onCardChangingPosition}
 			deckMenuItems={getActivePlayerDeckMenuItems(activePlayerCardZonePlaceType)}

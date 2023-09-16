@@ -23,7 +23,8 @@
 		canShuffle: boolean = false,
 		menuItems: ContextMenuItem[] = [],
 		onCardDrop: () => void = () => {},
-		onCardChangingPosition: () => void = () => {};
+		onCardChangingPosition: () => void = () => {},
+		onShuffleDeck: () => void = () => {};
 
 	let dropTargetStyle = { background: 'rgba(0, 0, 0, 0.2)' };
 
@@ -55,6 +56,7 @@
 						displayText: 'Shuffle deck',
 						onClick: () => {
 							cards = shuffle(cards);
+							onShuffleDeck();
 						}
 					}
 			  ]

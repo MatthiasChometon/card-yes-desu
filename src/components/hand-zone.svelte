@@ -3,12 +3,14 @@
 	import { shuffle } from '../services/shuffle-cards';
 	import CardZone from './card-zone.svelte';
 	import type { PlayableCard } from '../types/playable-card.type';
+	import type { GameCardState } from '../types/game-card-state.type';
 
 	export let cards: PlayableCard[] = [],
 		boxStyle: string = '',
 		onCardDrop: () => void,
 		onCardChangingPosition: () => void,
-		onShuffleCard: () => void;
+		onShuffleCard: () => void,
+		gameCardState: GameCardState | null = null;
 
 	const menuItems: ContextMenuItem[] = [
 		{
@@ -23,6 +25,7 @@
 
 <div style="width: 100%; height: 100%; flex: 3; display: flex; {boxStyle}">
 	<CardZone
+		{gameCardState}
 		{onCardChangingPosition}
 		{menuItems}
 		bind:cards

@@ -8,6 +8,7 @@
 		deckMenuItems: ContextMenuItem[],
 		onCardDrop: () => void,
 		onCardChangingPosition: () => void,
+		onShuffleDeck: () => void,
 		cardZonePlaceType: CardZonePlaceType.InvitedPlayer | CardZonePlaceType.HostPlayer;
 </script>
 
@@ -20,6 +21,7 @@
 		bind:cards={cardFieldZone[cardZonePlaceType].Deck}
 		superimposed
 		canShuffle
+		{onShuffleDeck}
 		gameCardState={{ faceUp: false, rotation: 0 }}
 		style="margin-left: 2.1%;"
 	/>

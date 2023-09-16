@@ -23,19 +23,9 @@
 		await playersConnection.createNewGame();
 	});
 
-	function onCardDrop() {
-		console.log('dropped');
+	function updateOpponentFieldBoard() {
 		playersConnection.sendData(fieldCards);
-	}
-
-	function onCardChangingPosition() {
-		console.log('change position');
-		playersConnection.sendData(fieldCards);
-	}
-
-	function onShuffleCard() {
-		console.log('change position');
-		playersConnection.sendData(fieldCards);
+		console.log('update');
 	}
 </script>
 
@@ -48,7 +38,12 @@
 	/>
 	{#if $playersConnection.isHost !== null}
 		<GameZones
-			{onShuffleCard}
+			opponentGameCardState={{ faceUp: false, rotation: 0 }}
+			onCardDraw={updateOpponentFieldBoard}
+			onShuffleDeck={updateOpponentFieldBoard}
+			onShuffleCard={updateOpponentFieldBoard}
+			onCardChangingPosition={updateOpponentFieldBoard}
+			onCardDrop={updateOpponentFieldBoard}
 			opponentCardZonePlaceType={!$playersConnection.isHost
 				? CardZonePlaceType.HostPlayer
 				: CardZonePlaceType.InvitedPlayer}
@@ -57,11 +52,9 @@
 				: CardZonePlaceType.InvitedPlayer}
 			extraMonsterZonesLeftZoneIndex={$playersConnection.isHost ? 0 : 1}
 			extraMonsterZonesRightZoneIndex={$playersConnection.isHost ? 1 : 0}
-			{onCardChangingPosition}
 			aspectRatio={cardRatio}
 			style="flex: 8;"
 			bind:fieldCards
-			{onCardDrop}
 		/>
 	{/if}
 </div>

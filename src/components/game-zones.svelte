@@ -3,6 +3,7 @@
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
 	import GameBoardZones from './game-board-zones.svelte';
 	import type { CardZonePlaceType } from '../enums/card-zone-place-type.enum';
+	import type { GameCardState } from '../types/game-card-state.type';
 
 	export let style = '',
 		fieldCards: CardFieldZoneType,
@@ -13,11 +14,15 @@
 		activePlayerCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer,
 		extraMonsterZonesLeftZoneIndex: 0 | 1,
 		extraMonsterZonesRightZoneIndex: 0 | 1,
+		opponentGameCardState: GameCardState,
+		onShuffleDeck: () => void,
+		onCardDraw: () => void,
 		onShuffleCard: () => void;
 </script>
 
 <div style="display: flex; justify-content: flex-end; flex-direction: column; position: relative; {style}">
 	<HandZone
+		gameCardState={opponentGameCardState}
 		{onShuffleCard}
 		{onCardChangingPosition}
 		boxStyle="align-items: flex-start;"
@@ -25,6 +30,8 @@
 		{onCardDrop}
 	/>
 	<GameBoardZones
+		{onCardDraw}
+		{onShuffleDeck}
 		{onCardChangingPosition}
 		{aspectRatio}
 		bind:cardFieldZone={fieldCards}
