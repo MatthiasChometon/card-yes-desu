@@ -1,50 +1,40 @@
 <script lang="ts">
-	import OpponentCardZones from './opponent-card-zones.svelte';
-	import { CardZonePlaceType } from '../enums/card-zone-place-type.enum';
+	import type { CardZonePlaceType } from '../enums/card-zone-place-type.enum';
 	import { drawCards } from '../services/draw-cards';
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
 	import type { ContextMenuItem } from '../types/context-menu-item.type';
 	import ActivePlayerCardZones from './active-player-card-zones.svelte';
 	import ExtraMonsterZones from './extra-monster-zones.svelte';
+	import OpponentCardZones from './opponent-card-zones.svelte';
 
 	export let cardFieldZone: CardFieldZoneType,
 		aspectRatio: number,
 		style: string = '',
 		onCardDrop: () => void,
 		onCardChangingPosition: () => void,
-		isHost: boolean;
+		opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer,
+		activePlayerCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer,
+		extraMonsterZonesLeftZoneIndex: 0 | 1,
+		extraMonsterZonesRightZoneIndex: 0 | 1;
 
-	const drawOneCardDisplayText = 'Draw one card';
-	const drawFiveCardsDisplayText = 'Draw five cards';
-
-	let activePlayerDeckMenuItems: ContextMenuItem[] = [
-		{
-			displayText: drawOneCardDisplayText,
-			onClick: () => {
-				cardFieldZone = drawCards(cardFieldZone, 1, CardZonePlaceType.HostPlayer);
+	function getActivePlayerDeckMenuItems(
+		cardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer
+	): ContextMenuItem[] {
+		return [
+			{
+				displayText: 'Draw one card',
+				onClick: () => {
+					cardFieldZone = drawCards(cardFieldZone, 1, cardZonePlaceType);
+				}
+			},
+			{
+				displayText: 'Draw five cards',
+				onClick: () => {
+					cardFieldZone = drawCards(cardFieldZone, 5, cardZonePlaceType);
+				}
 			}
-		},
-		{
-			displayText: drawFiveCardsDisplayText,
-			onClick: () => {
-				cardFieldZone = drawCards(cardFieldZone, 5, CardZonePlaceType.HostPlayer);
-			}
-		}
-	];
-	let opponentDeckMenuItems: ContextMenuItem[] = [
-		{
-			displayText: drawOneCardDisplayText,
-			onClick: () => {
-				cardFieldZone = drawCards(cardFieldZone, 1, CardZonePlaceType.InvitedPlayer);
-			}
-		},
-		{
-			displayText: drawFiveCardsDisplayText,
-			onClick: () => {
-				cardFieldZone = drawCards(cardFieldZone, 5, CardZonePlaceType.InvitedPlayer);
-			}
-		}
-	];
+		];
+	}
 </script>
 
 <div
@@ -56,24 +46,24 @@
 		alt="yugioh field"
 	/>
 	<div style="aspect-ratio: {aspectRatio}; height: 100%; display: flex; flex-direction: column;">
-		<ActivePlayerCardZones
-			cardZonePlaceType={isHost ? CardZonePlaceType.InvitedPlayer : CardZonePlaceType.HostPlayer}
+		<OpponentCardZones
+			cardZonePlaceType={opponentCardZonePlaceType}
 			{onCardChangingPosition}
-			deckMenuItems={activePlayerDeckMenuItems}
+			deckMenuItems={getActivePlayerDeckMenuItems(opponentCardZonePlaceType)}
 			bind:cardFieldZone
 			{onCardDrop}
 		/>
 		<ExtraMonsterZones
-			leftZoneIndex={isHost ? 0 : 1}
-			rightZoneIndex={isHost ? 1 : 0}
+			leftZoneIndex={extraMonsterZonesLeftZoneIndex}
+			rightZoneIndex={extraMonsterZonesRightZoneIndex}
 			{onCardChangingPosition}
 			bind:cardFieldZone
 			{onCardDrop}
 		/>
-		<OpponentCardZones
-			cardZonePlaceType={isHost ? CardZonePlaceType.HostPlayer : CardZonePlaceType.InvitedPlayer}
+		<ActivePlayerCardZones
+			cardZonePlaceType={activePlayerCardZonePlaceType}
 			{onCardChangingPosition}
-			deckMenuItems={opponentDeckMenuItems}
+			deckMenuItems={getActivePlayerDeckMenuItems(activePlayerCardZonePlaceType)}
 			bind:cardFieldZone
 			{onCardDrop}
 		/>
