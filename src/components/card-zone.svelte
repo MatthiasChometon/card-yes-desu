@@ -13,7 +13,7 @@
 	import type { ClientPosition } from '../types/client-position';
 	import { shuffle } from '../services/shuffle-cards';
 	import CardListModal from './card-list-modal.svelte';
-	import { DragEvent } from '../enums/drag-event';
+	import { onMoveToOnDrop } from '../services/on-move-to-on-drop';
 
 	export let style: string = '',
 		cards: PlayableCard[] = [],
@@ -74,8 +74,7 @@
 		}
 	}: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
 		cards = items;
-		const cardFounded = cards.find((card) => card.id === id);
-		if (cardFounded !== undefined) onCardDrop();
+		onMoveToOnDrop(trigger, onCardDrop);
 	};
 </script>
 

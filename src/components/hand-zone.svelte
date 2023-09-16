@@ -10,7 +10,7 @@
 	import { updateGameState } from '../services/update-game-state';
 	import Card from './card.svelte';
 	import ModalGameMenu from './modal-game-menu.svelte';
-	import { DragEvent } from '../enums/drag-event';
+	import { onMoveToOnDrop } from '../services/on-move-to-on-drop';
 
 	export let cards: PlayableCard[] = [],
 		boxStyle: string = '',
@@ -34,8 +34,7 @@
 		}
 	}: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
 		cards = items;
-		const cardFounded = cards.find((card) => card.id === id);
-		if (cardFounded !== undefined) onCardDrop();
+		onMoveToOnDrop(trigger, onCardDrop);
 	};
 
 	const contextMenu = ContextMenu();
