@@ -70,13 +70,12 @@
 	const handleDrop = ({
 		detail: {
 			items,
-			info: { trigger }
+			info: { id }
 		}
 	}: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
 		cards = items;
-		if (trigger === DragEvent.droppedIntoAnother) {
-			onCardDrop();
-		}
+		const cardFounded = cards.find((card) => card.id === id);
+		if (cardFounded !== undefined) onCardDrop();
 	};
 </script>
 
