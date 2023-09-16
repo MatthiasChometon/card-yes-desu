@@ -8,9 +8,10 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	const { subscribe, set, update } = writable<PlayersConnectionType>({
 		peer: null,
 		connection: null,
-		opponentPeerId: null,
+		opponentPeerId: 'toto',
 		playerPeerId: null,
-		isConnectedToOpponent: false
+		isConnectedToOpponent: false,
+		isHost: null
 	});
 
 	async function getNewPeer (): Promise<Peer> {
@@ -18,19 +19,13 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 		return new peerjs.Peer();
 	}
 
-	function parseReceivedData<T> (newData: unknown): T {
-		return JSON.parse(String(newData))
-	}
-
 	function openConnection (connection: DataConnection): void {
 		connection.on('open', function () {
-			console.log('player joined your game')
 			update(state => ({ ...state, isConnectedToOpponent: true }));
 
 			connection.on('data', function (data: unknown) {
 				console.log('Received', data);
-				const parsedData: T = parseReceivedData(data);
-				onDataReceived(parsedData);
+				onDataReceived(data as T);
 			});
 		});
 	}
@@ -40,9 +35,10 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 			update(state => ({ ...state, playerPeerId }));
 
 			peer.on('connection', function (connection: DataConnection) {
+				console.log('an opponent connected to your game')
 				update(state => {
 					openConnection(connection);
-					return { ...state, connection }
+					return { ...state, connection, isHost: true }
 				});
 			});
 		});
@@ -51,11 +47,11 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	function connectToCreatedGame (): void {
 		update(state => {
 			const { peer, opponentPeerId } = state;
-			if (opponentPeerId === null || peer === null) return state;
+			if (opponentPeerId === null || peer === null) throw new Error("opponentPeerId or peer is null");
 			const connection = peer.connect(opponentPeerId);
 			console.log('connected to player game')
 			openConnection(connection);
-			return { ...state, connection }
+			return { ...state, connection, isHost: false }
 		}
 		);
 	}
@@ -63,7 +59,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	function sendData (data: T): void {
 		update(state => {
 			const { connection } = state;
-			if (connection === null) return state;
+			if (connection === null) throw new Error("connection is null");
 			connection.send(data);
 			return state;
 		});

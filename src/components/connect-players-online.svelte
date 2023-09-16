@@ -11,4 +11,8 @@
 		<button on:click={connectToCreatedGame}>Connect</button>
 	</div>
 	<p>Connected with opponent: {playersConnection.isConnectedToOpponent ? 'yes' : 'no'}</p>
+
+	{#if playersConnection.isHost !== null}
+		<p>Host: {playersConnection.isHost ? 'you' : 'your opponent'}</p>
+	{/if}
 </div>

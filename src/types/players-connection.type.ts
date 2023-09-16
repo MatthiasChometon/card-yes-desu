@@ -6,4 +6,5 @@ export interface PlayersConnectionType {
     opponentPeerId: string | null
     playerPeerId: string | null;
     isConnectedToOpponent: boolean;
+    isHost: boolean | null;
 }
