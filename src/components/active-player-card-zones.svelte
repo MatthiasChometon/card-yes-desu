@@ -1,30 +1,62 @@
 <script lang="ts">
 	import CardZone from './card-zone.svelte';
-	import type { CardFieldZoneType } from '../types/card-field-zone.type';
 	import type { ContextMenuItem } from '../types/context-menu-item.type';
+	import type { CardFieldZoneType } from '../types/card-field-zone.type';
+	import type { CardZonePlaceType } from '../enums/card-zone-place-type.enum';
 
 	export let cardFieldZone: CardFieldZoneType,
 		deckMenuItems: ContextMenuItem[],
-		onCardDrop: () => void = () => {};
+		onCardDrop: () => void,
+		onCardChangingPosition: () => void,
+		cardZonePlaceType: CardZonePlaceType.InvitedPlayer | CardZonePlaceType.HostPlayer;
 </script>
 
 <div style="flex: 1; display: flex; width: 100%; margin-top: 1.7%;">
-	<CardZone {onCardDrop}
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
 		menuItems={deckMenuItems}
 		canChangePosition={false}
-		bind:cards={cardFieldZone.ActivePlayer.Deck}
+		bind:cards={cardFieldZone[cardZonePlaceType].Deck}
 		superimposed
 		canShuffle
 		gameCardState={{ faceUp: false, rotation: 0 }}
 		style="margin-left: 2.1%;"
 	/>
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.SpellTrapZone[0]} style="margin-left: 12.2%;" />
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.SpellTrapZone[1]} style="margin-left: 3.5%;" />
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.SpellTrapZone[2]} style="margin-left: 3.5%;" />
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.SpellTrapZone[3]} style="margin-left: 3.5%;" />
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.SpellTrapZone[4]} style="margin-left: 3.4%;" />
-	<CardZone {onCardDrop}
-		bind:cards={cardFieldZone.ActivePlayer.ExtraDeck}
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[0]}
+		style="margin-left: 12.2%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[1]}
+		style="margin-left: 3.5%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[2]}
+		style="margin-left: 3.5%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[3]}
+		style="margin-left: 3.5%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[4]}
+		style="margin-left: 3.4%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].ExtraDeck}
 		superimposed
 		canChangePosition={false}
 		gameCardState={{ faceUp: false, rotation: 0 }}
@@ -32,28 +64,64 @@
 	/>
 </div>
 <div style="flex: 1; display: flex; width: 100%;">
-	<CardZone {onCardDrop}
-		bind:cards={cardFieldZone.ActivePlayer.Graveyard}
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].Graveyard}
 		superimposed
 		canChangePosition={false}
 		style="margin-left: 2.1%;"
 	/>
-	<CardZone {onCardDrop}
-		bind:cards={cardFieldZone.ActivePlayer.Banished}
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].Banished}
 		superimposed
 		canChangePosition={false}
 		style="margin-left: 1.8%;"
 	/>
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.MonsterField[0]} style="margin-left: 2.2%;" />
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.MonsterField[1]} style="margin-left: 3.5%;" />
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.MonsterField[2]} style="margin-left: 3.4%;" />
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.MonsterField[3]} style="margin-left: 3.5%;" />
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.MonsterField[4]} style="margin-left: 3.4%;" />
-	<CardZone {onCardDrop}
-		bind:cards={cardFieldZone.ActivePlayer.SideDeck}
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[0]}
+		style="margin-left: 2.2%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[1]}
+		style="margin-left: 3.5%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[2]}
+		style="margin-left: 3.4%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[3]}
+		style="margin-left: 3.5%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[4]}
+		style="margin-left: 3.4%;"
+	/>
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].SideDeck}
 		superimposed
 		canChangePosition={false}
 		style="margin-left: 2.5%;"
 	/>
-	<CardZone {onCardDrop} bind:cards={cardFieldZone.ActivePlayer.FieldSpellZone} style="margin-left: 1.6%;" />
+	<CardZone
+		{onCardChangingPosition}
+		{onCardDrop}
+		bind:cards={cardFieldZone[cardZonePlaceType].FieldSpellZone}
+		style="margin-left: 1.6%;"
+	/>
 </div>

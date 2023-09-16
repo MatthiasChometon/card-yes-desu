@@ -13,7 +13,6 @@
 	import type { ClientPosition } from '../types/client-position';
 	import { shuffle } from '../services/shuffle-cards';
 	import CardListModal from './card-list-modal.svelte';
-	import { DragEvent } from '../enums/drag-event';
 
 	export let style: string = '',
 		cards: PlayableCard[] = [],
@@ -23,13 +22,12 @@
 		canChangePosition: boolean = true,
 		canShuffle: boolean = false,
 		menuItems: ContextMenuItem[] = [],
-		onCardDrop: () => void;
+		onCardDrop: () => void = () => {},
+		onCardChangingPosition: () => void = () => {};
 
 	let dropTargetStyle = { background: 'rgba(0, 0, 0, 0.2)' };
 
 	const getMarginLeft = (index: number): string => (superimposed ? '0' : `${index * 12}px`);
-	const getCard = (card: PlayableCard): PlayableCard =>
-		gameCardState === null ? card : updateSubObject(card, 'gameState', gameCardState);
 
 	const contextMenu = ContextMenu();
 	let cardClicked: PlayableCard | null = null;
@@ -45,8 +43,9 @@
 			? getContextMenuCardPositionItems().map(({ displayText, newPosition }) => ({
 					displayText,
 					onClick: () => {
-						if (cardClicked === null) return;
+						if (cardClicked === null) throw new Error("cardClicked can't be null");
 						cards = updateGameState(cards, cardClicked, newPosition);
+						onCardChangingPosition();
 					}
 			  }))
 			: [];
@@ -63,7 +62,7 @@
 		return [...menuItemsWithChangePositions, ...menuWithShuffleDeck, ...menuItems];
 	}
 
-	const handleConsider = ({ detail: { items, info } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
+	const handleConsider = ({ detail: { items } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
 		cards = items;
 	};
 
@@ -71,6 +70,10 @@
 		cards = items;
 		onCardDrop();
 	};
+
+	$: {
+		cards = cards.map((card) => (gameCardState === null ? card : updateSubObject(card, 'gameState', gameCardState)));
+	}
 </script>
 
 <div
@@ -89,7 +92,7 @@
 			onRightClick={(event) => {
 				onRightClick(event, card);
 			}}
-			card={getCard(card)}
+			{card}
 			style="position: absolute; height: 100%; width: 100%; margin-left: {getMarginLeft(index)}; {cardStyle}"
 		/>
 	{/each}

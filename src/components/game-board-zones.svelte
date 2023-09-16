@@ -10,7 +10,9 @@
 	export let cardFieldZone: CardFieldZoneType,
 		aspectRatio: number,
 		style: string = '',
-		onCardDrop: () => void = () => {};
+		onCardDrop: () => void,
+		onCardChangingPosition: () => void,
+		isHost: boolean;
 
 	const drawOneCardDisplayText = 'Draw one card';
 	const drawFiveCardsDisplayText = 'Draw five cards';
@@ -19,13 +21,13 @@
 		{
 			displayText: drawOneCardDisplayText,
 			onClick: () => {
-				cardFieldZone = drawCards(cardFieldZone, 1, CardZonePlaceType.ActivePlayer);
+				cardFieldZone = drawCards(cardFieldZone, 1, CardZonePlaceType.HostPlayer);
 			}
 		},
 		{
 			displayText: drawFiveCardsDisplayText,
 			onClick: () => {
-				cardFieldZone = drawCards(cardFieldZone, 5, CardZonePlaceType.ActivePlayer);
+				cardFieldZone = drawCards(cardFieldZone, 5, CardZonePlaceType.HostPlayer);
 			}
 		}
 	];
@@ -33,13 +35,13 @@
 		{
 			displayText: drawOneCardDisplayText,
 			onClick: () => {
-				cardFieldZone = drawCards(cardFieldZone, 1, CardZonePlaceType.Opponent);
+				cardFieldZone = drawCards(cardFieldZone, 1, CardZonePlaceType.InvitedPlayer);
 			}
 		},
 		{
 			displayText: drawFiveCardsDisplayText,
 			onClick: () => {
-				cardFieldZone = drawCards(cardFieldZone, 5, CardZonePlaceType.Opponent);
+				cardFieldZone = drawCards(cardFieldZone, 5, CardZonePlaceType.InvitedPlayer);
 			}
 		}
 	];
@@ -54,8 +56,26 @@
 		alt="yugioh field"
 	/>
 	<div style="aspect-ratio: {aspectRatio}; height: 100%; display: flex; flex-direction: column;">
-		<ActivePlayerCardZones deckMenuItems={activePlayerDeckMenuItems} bind:cardFieldZone {onCardDrop} />
-		<ExtraMonsterZones bind:cardFieldZone {onCardDrop} />
-		<OpponentCardZones deckMenuItems={opponentDeckMenuItems} bind:cardFieldZone {onCardDrop} />
+		<ActivePlayerCardZones
+			cardZonePlaceType={isHost ? CardZonePlaceType.InvitedPlayer : CardZonePlaceType.HostPlayer}
+			{onCardChangingPosition}
+			deckMenuItems={activePlayerDeckMenuItems}
+			bind:cardFieldZone
+			{onCardDrop}
+		/>
+		<ExtraMonsterZones
+			leftZoneIndex={isHost ? 0 : 1}
+			rightZoneIndex={isHost ? 1 : 0}
+			{onCardChangingPosition}
+			bind:cardFieldZone
+			{onCardDrop}
+		/>
+		<OpponentCardZones
+			cardZonePlaceType={isHost ? CardZonePlaceType.HostPlayer : CardZonePlaceType.InvitedPlayer}
+			{onCardChangingPosition}
+			deckMenuItems={opponentDeckMenuItems}
+			bind:cardFieldZone
+			{onCardDrop}
+		/>
 	</div>
 </div>

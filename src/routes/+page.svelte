@@ -17,12 +17,18 @@
 	}
 
 	let playersConnection = PlayersConnection<CardFieldZoneType>(onDataReceived);
+
 	onMount(async () => {
 		await playersConnection.createNewGame();
 	});
 
 	function onCardDrop() {
 		console.log('dropped');
+		playersConnection.sendData(fieldCards);
+	}
+
+	function onCardChangingPosition() {
+		console.log('change position');
 		playersConnection.sendData(fieldCards);
 	}
 </script>
@@ -34,5 +40,14 @@
 		style="flex: 6;"
 		bind:fieldCards
 	/>
-	<GameZones aspectRatio={cardRatio} style="flex: 8; " bind:fieldCards {onCardDrop} />
+	{#if $playersConnection.isHost !== null}
+		<GameZones
+			isHost={$playersConnection.isHost}
+			{onCardChangingPosition}
+			aspectRatio={cardRatio}
+			style="flex: 8;"
+			bind:fieldCards
+			{onCardDrop}
+		/>
+	{/if}
 </div>

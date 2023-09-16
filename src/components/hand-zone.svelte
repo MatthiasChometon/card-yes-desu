@@ -6,7 +6,8 @@
 
 	export let cards: PlayableCard[] = [],
 		boxStyle: string = '',
-		onCardDrop: () => void = () => {};
+		onCardDrop: () => void,
+		onCardChangingPosition: () => void;
 
 	const menuItems: ContextMenuItem[] = [
 		{
@@ -20,6 +21,7 @@
 
 <div style="width: 100%; height: 100%; flex: 3; display: flex; {boxStyle}">
 	<CardZone
+		{onCardChangingPosition}
 		{menuItems}
 		bind:cards
 		{onCardDrop}

@@ -65,7 +65,7 @@
 	function setTestCards() {
 		fieldCards = {
 			...fieldCards,
-			ActivePlayer: { ...fieldCards.ActivePlayer, Hand: cardsExamples }
+			HostPlayer: { ...fieldCards.HostPlayer, Hand: cardsExamples }
 		};
 	}
 
