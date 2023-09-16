@@ -70,7 +70,7 @@
 	const handleDrop = ({
 		detail: {
 			items,
-			info: { id }
+			info: { trigger }
 		}
 	}: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
 		cards = items;
