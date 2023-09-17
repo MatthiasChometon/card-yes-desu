@@ -15,9 +15,21 @@
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
+	let localFieldCards: CardFieldZoneType = getDefaultCardFieldZone();
 	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived);
 	let opponentCardIdsRevealed: string[] = [];
 	let opponentHandRevealed: boolean = false;
+	let opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer | null = null;
+
+	$: {
+		if ($playersConnection.isHost === null) opponentCardZonePlaceType = null;
+
+		if ($playersConnection.isHost !== null) {
+			opponentCardZonePlaceType = !$playersConnection.isHost
+				? CardZonePlaceType.HostPlayer
+				: CardZonePlaceType.InvitedPlayer;
+		}
+	}
 
 	function onDataReceived(data: PlayersConnectionSendedDataType) {
 		const { fieldCards: updatedFieldCards, cardToReveal, revealHand, hideHand } = data;
@@ -95,20 +107,6 @@
 		return cardsWithHiddenCards;
 	}
 
-	let opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer | null = null;
-
-	$: {
-		if ($playersConnection.isHost !== null) {
-			opponentCardZonePlaceType = !$playersConnection.isHost
-				? CardZonePlaceType.HostPlayer
-				: CardZonePlaceType.InvitedPlayer;
-		}
-
-		if ($playersConnection.isHost === null) {
-			opponentCardZonePlaceType = null;
-		}
-	}
-
 	$: {
 		let newField = {
 			...fieldCards,
@@ -143,7 +141,7 @@
 		bind:playersConnection={$playersConnection}
 		connectToCreatedGame={playersConnection.connectToCreatedGame}
 		style="flex: 6;"
-		bind:fieldCards
+		bind:fieldCards={localFieldCards}
 	/>
 	{#if $playersConnection.isHost !== null}
 		<GameZones
@@ -165,7 +163,7 @@
 			extraMonsterZonesRightZoneIndex={$playersConnection.isHost ? 1 : 0}
 			aspectRatio={cardRatio}
 			style="flex: 8;"
-			bind:fieldCards
+			bind:fieldCards={localFieldCards}
 		/>
 	{/if}
 </div>
