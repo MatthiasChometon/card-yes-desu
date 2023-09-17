@@ -3,9 +3,13 @@
 	import { getDefaultCardFieldZone } from '../services/get-default-card-field-zone';
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
 	import type { PlayableCard } from '../types/playable-card.type';
+	import ConnectPlayersOnline from './connect-players-online.svelte';
+	import type { PlayersConnectionType } from '../types/players-connection.type';
 
 	export let style = '',
-		fieldCards: CardFieldZoneType;
+		fieldCards: CardFieldZoneType,
+		playersConnection: PlayersConnectionType,
+		connectToCreatedGame: () => void;
 
 	const gameState = {
 		rotation: 0,
@@ -61,7 +65,7 @@
 	function setTestCards() {
 		fieldCards = {
 			...fieldCards,
-			ActivePlayer: { ...fieldCards.ActivePlayer, Hand: cardsExamples }
+			HostPlayer: { ...fieldCards.HostPlayer, Hand: cardsExamples }
 		};
 	}
 
@@ -77,4 +81,5 @@
 			setTestCards();
 		}}>Reset</button
 	>
+	<ConnectPlayersOnline bind:playersConnection {connectToCreatedGame} />
 </div>

@@ -1,5 +1,5 @@
 export enum CardZonePlaceType {
-  Opponent = 'Opponent',
-  ActivePlayer = 'ActivePlayer',
+  InvitedPlayer = 'InvitedPlayer',
+  HostPlayer = 'HostPlayer',
   ExtraMonsterZone = 'ExtraMonsterZone',
 }

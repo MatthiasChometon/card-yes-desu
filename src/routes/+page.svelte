@@ -1,17 +1,60 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import GameInformation from '../components/game-information.svelte';
-	import GameZones from '../components/game-zones.svelte';
 	import { getDefaultCardFieldZone } from '../services/get-default-card-field-zone';
+	import { PlayersConnection } from '../store/players-connection.store';
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
 	import type { CardSize } from '../types/card-size.type';
+	import { CardZonePlaceType } from '../enums/card-zone-place-type.enum';
+	import GameZones from '../components/game-zones.svelte';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
 
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
+
+	function onDataReceived(data: CardFieldZoneType) {
+		fieldCards = data;
+	}
+
+	let playersConnection = PlayersConnection<CardFieldZoneType>(onDataReceived);
+
+	onMount(async () => {
+		await playersConnection.createNewGame();
+	});
+
+	function updateOpponentFieldBoard() {
+		playersConnection.sendData(fieldCards);
+		console.log('update');
+	}
 </script>
 
 <div style="height: 100vh; width: 100vw; display: flex; justify-content: flex-end;">
-	<GameInformation style="flex: 6;" bind:fieldCards />
-	<GameZones aspectRatio={cardRatio} style="flex: 8; " bind:fieldCards />
+	<GameInformation
+		bind:playersConnection={$playersConnection}
+		connectToCreatedGame={playersConnection.connectToCreatedGame}
+		style="flex: 6;"
+		bind:fieldCards
+	/>
+	{#if $playersConnection.isHost !== null}
+		<GameZones
+			opponentGameCardState={{ faceUp: false, rotation: 0 }}
+			onCardDraw={updateOpponentFieldBoard}
+			onShuffleDeck={updateOpponentFieldBoard}
+			onShuffleCard={updateOpponentFieldBoard}
+			onCardChangingPosition={updateOpponentFieldBoard}
+			onCardDrop={updateOpponentFieldBoard}
+			opponentCardZonePlaceType={!$playersConnection.isHost
+				? CardZonePlaceType.HostPlayer
+				: CardZonePlaceType.InvitedPlayer}
+			activePlayerCardZonePlaceType={$playersConnection.isHost
+				? CardZonePlaceType.HostPlayer
+				: CardZonePlaceType.InvitedPlayer}
+			extraMonsterZonesLeftZoneIndex={$playersConnection.isHost ? 0 : 1}
+			extraMonsterZonesRightZoneIndex={$playersConnection.isHost ? 1 : 0}
+			aspectRatio={cardRatio}
+			style="flex: 8;"
+			bind:fieldCards
+		/>
+	{/if}
 </div>
