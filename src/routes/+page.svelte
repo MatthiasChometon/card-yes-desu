@@ -9,12 +9,11 @@
 	import GameZones from '../components/game-zones.svelte';
 	import type { PlayableCard } from '../types/playable-card.type';
 	import type { PlayersConnectionSendedDataType } from '../types/players-connection-sended-data.type';
+	import { CardZoneType } from '../enums/card-zone-type.enum';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
-
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
-	let localFieldCards: CardFieldZoneType = getDefaultCardFieldZone();
 	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived);
 	let opponentCardIdsRevealed: string[] = [];
 	let opponentHandRevealed: boolean = false;
@@ -32,13 +31,43 @@
 
 	function onDataReceived(data: PlayersConnectionSendedDataType) {
 		const { fieldCards: updatedFieldCards, cardToReveal, revealHand, hideHand } = data;
-		if (updatedFieldCards !== null) fieldCards = updatedFieldCards;
+		if (updatedFieldCards !== null) onFieldCardsDataReceived(updatedFieldCards);
 		if (cardToReveal !== null) opponentCardIdsRevealed = [...opponentCardIdsRevealed, cardToReveal.id];
 		if (revealHand !== null) opponentHandRevealed = true;
 		if (hideHand !== null) {
 			opponentHandRevealed = false;
 			opponentCardIdsRevealed = [];
 		}
+	}
+
+	function keepCardLocalGameState(onlineCards: PlayableCard[], localCards: PlayableCard[]) {
+		console.log({ onlineCards });
+		return onlineCards.map((card) => {
+			const localCardFounded = localCards.find((localCard) => localCard.id === card.id);
+			if (localCardFounded === undefined) return card;
+			return { ...card, gameState: { ...card.gameState, ...localCardFounded.gameState } };
+		});
+	}
+
+	function onFieldCardsDataReceived(updatedFieldCards: CardFieldZoneType) {
+		fieldCards = {
+			...updatedFieldCards,
+			[CardZonePlaceType.HostPlayer]: {
+				...updatedFieldCards[CardZonePlaceType.HostPlayer],
+				[CardZoneType.Hand]: keepCardLocalGameState(
+					updatedFieldCards[CardZonePlaceType.HostPlayer][CardZoneType.Hand],
+					fieldCards[CardZonePlaceType.HostPlayer][CardZoneType.Hand]
+				)
+			},
+			[CardZonePlaceType.InvitedPlayer]: {
+				...updatedFieldCards[CardZonePlaceType.InvitedPlayer],
+				[CardZoneType.Hand]: keepCardLocalGameState(
+					updatedFieldCards[CardZonePlaceType.InvitedPlayer][CardZoneType.Hand],
+					fieldCards[CardZonePlaceType.InvitedPlayer][CardZoneType.Hand]
+				)
+			}
+		};
+		console.log({ fieldCards });
 	}
 
 	function updateOpponentFieldBoard() {
@@ -77,7 +106,7 @@
 	}
 
 	$: {
-		const fieldCardsWithHiddenCards = {
+		let newField = {
 			...fieldCards,
 			HostPlayer: {
 				...fieldCards.HostPlayer,
@@ -90,20 +119,18 @@
 				ExtraDeck: hideCards(fieldCards.InvitedPlayer.ExtraDeck)
 			}
 		};
-		fieldCards = fieldCardsWithHiddenCards;
-	}
 
-	$: {
-		if (opponentCardZonePlaceType === null) localFieldCards = fieldCards;
 		if (opponentCardZonePlaceType !== null) {
-			localFieldCards = {
-				...localFieldCards,
+			newField = {
+				...newField,
 				[opponentCardZonePlaceType]: {
-					...localFieldCards[opponentCardZonePlaceType],
-					Hand: hideOpponentHand(localFieldCards[opponentCardZonePlaceType].Hand)
+					...newField[opponentCardZonePlaceType],
+					Hand: hideOpponentHand(newField[opponentCardZonePlaceType].Hand)
 				}
 			};
 		}
+
+		fieldCards = newField;
 	}
 </script>
 
@@ -112,7 +139,7 @@
 		bind:playersConnection={$playersConnection}
 		connectToCreatedGame={playersConnection.connectToCreatedGame}
 		style="flex: 6;"
-		bind:fieldCards={localFieldCards}
+		bind:fieldCards
 	/>
 	{#if $playersConnection.isHost !== null}
 		<GameZones
@@ -134,7 +161,7 @@
 			extraMonsterZonesRightZoneIndex={$playersConnection.isHost ? 1 : 0}
 			aspectRatio={cardRatio}
 			style="flex: 8;"
-			bind:fieldCards={localFieldCards}
+			bind:fieldCards
 		/>
 	{/if}
 </div>

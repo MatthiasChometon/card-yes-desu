@@ -3,7 +3,6 @@
 	import { shuffle } from '../services/shuffle-cards';
 	import CardZone from './card-zone.svelte';
 	import type { PlayableCard } from '../types/playable-card.type';
-	import type { GameCardState } from '../types/game-card-state.type';
 
 	export let cards: PlayableCard[] = [],
 		boxStyle: string = '',
@@ -25,19 +24,19 @@
 			}
 		},
 		{
-			displayText: 'Hide your hand',
+			displayText: 'Hide hand',
 			onClick: () => {
 				onHideHand();
 			}
 		},
 		{
-			displayText: 'Reveal your hand',
+			displayText: 'Reveal hand',
 			onClick: () => {
 				onHandReveal();
 			}
 		},
 		{
-			displayText: 'Reveal a card',
+			displayText: 'Reveal card',
 			onClick: () => {
 				if (cardClicked === null) throw new Error("cardClicked can't be null");
 				onCardReveal(cardClicked);
