@@ -9,8 +9,8 @@
 - can close menu when select ✅
 - play online ✅
 - refactor card-list-modal ✅
+- can reveal card, hand and hide hand ✅
 
-- can reveal card, hand and hide hand
 - can create deck and use it in game
 - import from api all cards
 
