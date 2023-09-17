@@ -67,9 +67,15 @@
 	let opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer | null = null;
 
 	$: {
-		opponentCardZonePlaceType = !$playersConnection.isHost
-			? CardZonePlaceType.HostPlayer
-			: CardZonePlaceType.InvitedPlayer;
+		if ($playersConnection.isHost === null) {
+			opponentCardZonePlaceType = null;
+		}
+
+		if ($playersConnection.isHost !== null) {
+			opponentCardZonePlaceType = !$playersConnection.isHost
+				? CardZonePlaceType.HostPlayer
+				: CardZonePlaceType.InvitedPlayer;
+		}
 	}
 
 	$: {
@@ -96,13 +102,6 @@
 				}
 			};
 		}
-	}
-
-	$: {
-		const opponent = !$playersConnection.isHost ? CardZonePlaceType.HostPlayer : CardZonePlaceType.InvitedPlayer;
-		fieldCards[opponent].Hand = fieldCards[opponent].Hand.map((card) => {
-			return { ...card, gameState: { faceUp: false, rotation: 0 } };
-		});
 	}
 </script>
 
