@@ -31,6 +31,7 @@
 	}
 
 	function keepCardLocalGameState(onlineCards: PlayableCard[], localCards: PlayableCard[]) {
+		console.log({ onlineCards });
 		return onlineCards.map((card) => {
 			const localCardFounded = localCards.find((localCard) => localCard.id === card.id);
 			if (localCardFounded === undefined) return card;
@@ -45,6 +46,7 @@
 		return {
 			...updatedFieldCards,
 			[cardZonePlaceType]: {
+				...updatedFieldCards[cardZonePlaceType],
 				[CardZoneType.Hand]: keepCardLocalGameState(
 					updatedFieldCards[cardZonePlaceType][CardZoneType.Hand],
 					fieldCards[cardZonePlaceType][CardZoneType.Hand]
@@ -59,6 +61,7 @@
 			...keepCardZonePlaceLocalGameState(CardZonePlaceType.HostPlayer, updatedFieldCards),
 			...keepCardZonePlaceLocalGameState(CardZonePlaceType.InvitedPlayer, updatedFieldCards)
 		};
+		console.log({ fieldCards });
 	}
 
 	function updateOpponentFieldBoard() {
