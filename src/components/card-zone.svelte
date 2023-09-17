@@ -24,14 +24,14 @@
 		menuItems: ContextMenuItem[] = [],
 		onCardDrop: () => void = () => {},
 		onCardChangingPosition: () => void = () => {},
-		onShuffleDeck: () => void = () => {};
+		onShuffleDeck: () => void = () => {},
+		cardClicked: PlayableCard | null = null;
 
 	let dropTargetStyle = { background: 'rgba(0, 0, 0, 0.2)' };
 
 	const getMarginLeft = (index: number): string => (superimposed ? '0' : `${index * 12}px`);
 
 	const contextMenu = ContextMenu();
-	let cardClicked: PlayableCard | null = null;
 	let showCardListModal: boolean = false;
 
 	function onRightClick({ clientX, clientY }: ClientPosition, card: PlayableCard): void {

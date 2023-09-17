@@ -10,7 +10,12 @@
 		onCardDrop: () => void,
 		onCardChangingPosition: () => void,
 		onShuffleCard: () => void,
+		onCardReveal: (card: PlayableCard) => void,
+		onHideHand: () => void,
+		onHandReveal: () => void,
 		gameCardState: GameCardState | null = null;
+
+	let cardClicked: PlayableCard | null = null;
 
 	const menuItems: ContextMenuItem[] = [
 		{
@@ -18,6 +23,25 @@
 			onClick: () => {
 				cards = shuffle(cards);
 				onShuffleCard();
+			}
+		},
+		{
+			displayText: 'Hide your hand',
+			onClick: () => {
+				onHideHand();
+			}
+		},
+		{
+			displayText: 'Reveal your hand',
+			onClick: () => {
+				onHandReveal();
+			}
+		},
+		{
+			displayText: 'Reveal a card',
+			onClick: () => {
+				if (cardClicked === null) throw new Error("cardClicked can't be null");
+				onCardReveal(cardClicked);
 			}
 		}
 	];

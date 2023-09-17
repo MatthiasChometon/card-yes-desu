@@ -7,6 +7,7 @@
 	import type { CardSize } from '../types/card-size.type';
 	import { CardZonePlaceType } from '../enums/card-zone-place-type.enum';
 	import GameZones from '../components/game-zones.svelte';
+	import type { PlayableCard } from '../types/playable-card.type';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
@@ -27,6 +28,12 @@
 		playersConnection.sendData(fieldCards);
 		console.log('update');
 	}
+
+	function onHideHand(): void {}
+	function onHandReveal(): void {}
+	function onCardReveal(card: PlayableCard): void {
+		playersConnection.sendData(fieldCards);
+	}
 </script>
 
 <div style="height: 100vh; width: 100vw; display: flex; justify-content: flex-end;">
@@ -38,6 +45,9 @@
 	/>
 	{#if $playersConnection.isHost !== null}
 		<GameZones
+			{onHideHand}
+			{onHandReveal}
+			{onCardReveal}
 			opponentGameCardState={{ faceUp: false, rotation: 0 }}
 			onCardDraw={updateOpponentFieldBoard}
 			onShuffleDeck={updateOpponentFieldBoard}
