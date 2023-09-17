@@ -57,7 +57,7 @@
 	>
 		{#each cards as card, _index}
 			<Card
-				{card}
+				card={{ ...card, gameState: { faceUp: true, rotation: 0 } }}
 				onRightClick={(event) => {
 					onRightClick(event, card);
 				}}
