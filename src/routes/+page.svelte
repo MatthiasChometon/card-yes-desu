@@ -15,17 +15,17 @@
 
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
 	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived);
-	let opponentCardRevealed: PlayableCard | null = null;
+	let opponentCardIdsRevealed: string[] = [];
 	let opponentHandRevealed: boolean = false;
 
 	function onDataReceived(data: PlayersConnectionSendedDataType) {
 		const { fieldCards: updatedFieldCards, cardToReveal, revealHand, hideHand } = data;
 		if (updatedFieldCards !== null) fieldCards = updatedFieldCards;
-		if (cardToReveal !== null) opponentCardRevealed = cardToReveal;
+		if (cardToReveal !== null) opponentCardIdsRevealed = [...opponentCardIdsRevealed, cardToReveal.id];
 		if (revealHand !== null) opponentHandRevealed = true;
 		if (hideHand !== null) {
 			opponentHandRevealed = false;
-			opponentCardRevealed = null;
+			opponentCardIdsRevealed = [];
 		}
 	}
 
@@ -57,8 +57,8 @@
 		if (opponentHandRevealed) return cards;
 
 		const cardsWithHiddenCards = cards.map((card) => {
-			if (card === opponentCardRevealed) return { ...card, gameState: { faceUp: true, rotation: 0 } };
-			return { ...card, gameState: { faceUp: false, rotation: 0 } };
+			const faceUp = opponentCardIdsRevealed.includes(card.id);
+			return { ...card, gameState: { faceUp, rotation: 0 } };
 		});
 
 		return cardsWithHiddenCards;

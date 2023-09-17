@@ -65,7 +65,25 @@
 	function setTestCards() {
 		fieldCards = {
 			...fieldCards,
-			HostPlayer: { ...fieldCards.HostPlayer, Hand: cardsExamples }
+			HostPlayer: { ...fieldCards.HostPlayer, Hand: cardsExamples },
+			InvitedPlayer: {
+				...fieldCards.InvitedPlayer,
+				Hand: [
+					{
+						id: '4545454545455',
+						frontPicture: 'https://m.media-amazon.com/images/I/51N+J-WhXCL._AC_UF894,1000_QL80_.jpg',
+						backPicture: 'back-card.png',
+						gameState
+					},
+					{
+						id: '668886688',
+						frontPicture:
+							'https://images.saymedia-content.com/.image/t_share/MTc0NDYwODIxMDE4MTI1Njcy/top-10-strongest-yu-gi-oh-flip-effect-monsters.png',
+						backPicture: 'back-card.png',
+						gameState
+					}
+				]
+			}
 		};
 	}
 
