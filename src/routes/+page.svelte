@@ -99,9 +99,15 @@
 	let opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer | null = null;
 
 	$: {
-		opponentCardZonePlaceType = !$playersConnection.isHost
-			? CardZonePlaceType.HostPlayer
-			: CardZonePlaceType.InvitedPlayer;
+		if ($playersConnection.isHost !== null) {
+			opponentCardZonePlaceType = !$playersConnection.isHost
+				? CardZonePlaceType.HostPlayer
+				: CardZonePlaceType.InvitedPlayer;
+		}
+
+		if ($playersConnection.isHost === null) {
+			opponentCardZonePlaceType = null;
+		}
 	}
 
 	$: {
