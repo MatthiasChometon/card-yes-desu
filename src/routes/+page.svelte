@@ -9,10 +9,11 @@
 	import GameZones from '../components/game-zones.svelte';
 	import type { PlayableCard } from '../types/playable-card.type';
 	import type { PlayersConnectionSendedDataType } from '../types/players-connection-sended-data.type';
+	import { CardZoneType } from '../enums/card-zone-type.enum';
+	import type { PlayerCardZoneType } from '../types/player-card-zone.type';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
-
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
 	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived);
 	let opponentCardIdsRevealed: string[] = [];
@@ -20,13 +21,44 @@
 
 	function onDataReceived(data: PlayersConnectionSendedDataType) {
 		const { fieldCards: updatedFieldCards, cardToReveal, revealHand, hideHand } = data;
-		if (updatedFieldCards !== null) fieldCards = updatedFieldCards;
+		if (updatedFieldCards !== null) onFieldCardsDataReceived(updatedFieldCards);
 		if (cardToReveal !== null) opponentCardIdsRevealed = [...opponentCardIdsRevealed, cardToReveal.id];
 		if (revealHand !== null) opponentHandRevealed = true;
 		if (hideHand !== null) {
 			opponentHandRevealed = false;
 			opponentCardIdsRevealed = [];
 		}
+	}
+
+	function keepCardLocalGameState(onlineCards: PlayableCard[], localCards: PlayableCard[]) {
+		return onlineCards.map((card) => {
+			const localCardFounded = localCards.find((localCard) => localCard.id === card.id);
+			if (localCardFounded === undefined) return card;
+			return { ...card, gameState: { ...card.gameState, ...localCardFounded.gameState } };
+		});
+	}
+
+	function keepCardZonePlaceLocalGameState(
+		cardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer,
+		updatedFieldCards: CardFieldZoneType
+	): CardFieldZoneType {
+		return {
+			...updatedFieldCards,
+			[cardZonePlaceType]: {
+				[CardZoneType.Hand]: keepCardLocalGameState(
+					updatedFieldCards[cardZonePlaceType][CardZoneType.Hand],
+					fieldCards[cardZonePlaceType][CardZoneType.Hand]
+				)
+			}
+		};
+	}
+
+	function onFieldCardsDataReceived(updatedFieldCards: CardFieldZoneType) {
+		fieldCards = {
+			...updatedFieldCards,
+			...keepCardZonePlaceLocalGameState(CardZonePlaceType.HostPlayer, updatedFieldCards),
+			...keepCardZonePlaceLocalGameState(CardZonePlaceType.InvitedPlayer, updatedFieldCards)
+		};
 	}
 
 	function updateOpponentFieldBoard() {
@@ -73,7 +105,7 @@
 	}
 
 	$: {
-		const fieldCardsWithHiddenCards = {
+		let newField = {
 			...fieldCards,
 			HostPlayer: {
 				...fieldCards.HostPlayer,
@@ -88,21 +120,16 @@
 		};
 
 		if (opponentCardZonePlaceType !== null) {
-			fieldCards = {
-				...fieldCardsWithHiddenCards,
+			newField = {
+				...newField,
 				[opponentCardZonePlaceType]: {
-					...fieldCardsWithHiddenCards[opponentCardZonePlaceType],
-					Hand: hideOpponentHand(fieldCardsWithHiddenCards[opponentCardZonePlaceType].Hand)
+					...newField[opponentCardZonePlaceType],
+					Hand: hideOpponentHand(newField[opponentCardZonePlaceType].Hand)
 				}
 			};
 		}
-	}
 
-	$: {
-		const opponent = !$playersConnection.isHost ? CardZonePlaceType.HostPlayer : CardZonePlaceType.InvitedPlayer;
-		fieldCards[opponent].Hand = fieldCards[opponent].Hand.map((card) => {
-			return { ...card, gameState: { faceUp: false, rotation: 0 } };
-		});
+		fieldCards = newField;
 	}
 </script>
 
