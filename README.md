@@ -7,9 +7,10 @@
 - draw one or five ✅
 - view deck or extra deck or side deck or banished or graveyard to dnd on board ✅
 - can close menu when select ✅
+- play online ✅
+- refactor card-list-modal ✅
 
-- play online
-- refactor card-list-modal
+- can reveal card, hand and hide hand
 - can create deck and use it in game
 - import from api all cards
 
