@@ -3,7 +3,6 @@
 	import type { CardFieldZoneType } from '../types/card-field-zone.type';
 	import GameBoardZones from './game-board-zones.svelte';
 	import type { CardZonePlaceType } from '../enums/card-zone-place-type.enum';
-	import type { GameCardState } from '../types/game-card-state.type';
 	import type { PlayableCard } from '../types/playable-card.type';
 
 	export let style = '',
@@ -15,7 +14,6 @@
 		activePlayerCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer,
 		extraMonsterZonesLeftZoneIndex: 0 | 1,
 		extraMonsterZonesRightZoneIndex: 0 | 1,
-		opponentGameCardState: GameCardState,
 		onShuffleDeck: () => void,
 		onCardDraw: () => void,
 		onShuffleCard: () => void,
@@ -29,7 +27,6 @@
 		{onHideHand}
 		{onHandReveal}
 		{onCardReveal}
-		gameCardState={opponentGameCardState}
 		{onShuffleCard}
 		{onCardChangingPosition}
 		boxStyle="align-items: flex-start;"

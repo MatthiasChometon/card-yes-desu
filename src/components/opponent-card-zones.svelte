@@ -22,7 +22,6 @@
 		superimposed
 		canShuffle
 		{onShuffleDeck}
-		gameCardState={{ faceUp: false, rotation: 0 }}
 		style="margin-left: 2.1%;"
 	/>
 	<CardZone
@@ -61,7 +60,6 @@
 		bind:cards={cardFieldZone[cardZonePlaceType].ExtraDeck}
 		superimposed
 		canChangePosition={false}
-		gameCardState={{ faceUp: false, rotation: 0 }}
 		style="margin-left: 12.2%;"
 	/>
 </div>

@@ -17,7 +17,6 @@
 	export let style: string = '',
 		cards: PlayableCard[] = [],
 		superimposed: boolean = false,
-		gameCardState: GameCardState | null = null,
 		cardStyle: string = '',
 		canChangePosition: boolean = true,
 		canShuffle: boolean = false,
@@ -72,10 +71,6 @@
 		cards = items;
 		onCardDrop();
 	};
-
-	$: {
-		cards = cards.map((card) => (gameCardState === null ? card : updateSubObject(card, 'gameState', gameCardState)));
-	}
 </script>
 
 <div

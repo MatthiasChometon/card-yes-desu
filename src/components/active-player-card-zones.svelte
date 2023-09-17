@@ -83,7 +83,6 @@
 		bind:cards={cardFieldZone[cardZonePlaceType].ExtraDeck}
 		superimposed
 		canChangePosition={false}
-		gameCardState={{ faceUp: false, rotation: 0 }}
 		style="margin-left: 2.3%;"
 	/>
 	<CardZone
@@ -125,7 +124,6 @@
 		{onShuffleDeck}
 		canChangePosition={false}
 		menuItems={deckMenuItems}
-		gameCardState={{ faceUp: false, rotation: 0 }}
 		style="margin-left: 12.2%;"
 	/>
 </div>

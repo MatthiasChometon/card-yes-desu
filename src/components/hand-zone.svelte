@@ -12,8 +12,7 @@
 		onShuffleCard: () => void,
 		onCardReveal: (card: PlayableCard) => void,
 		onHideHand: () => void,
-		onHandReveal: () => void,
-		gameCardState: GameCardState | null = null;
+		onHandReveal: () => void;
 
 	let cardClicked: PlayableCard | null = null;
 
@@ -49,7 +48,6 @@
 
 <div style="width: 100%; height: 100%; flex: 3; display: flex; {boxStyle}">
 	<CardZone
-		{gameCardState}
 		{onCardChangingPosition}
 		{menuItems}
 		bind:cards
