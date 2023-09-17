@@ -39,27 +39,23 @@
 		});
 	}
 
-	function keepCardZonePlaceLocalGameState(
-		cardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer,
-		updatedFieldCards: CardFieldZoneType
-	): CardFieldZoneType {
-		return {
-			...updatedFieldCards,
-			[cardZonePlaceType]: {
-				...updatedFieldCards[cardZonePlaceType],
-				[CardZoneType.Hand]: keepCardLocalGameState(
-					updatedFieldCards[cardZonePlaceType][CardZoneType.Hand],
-					fieldCards[cardZonePlaceType][CardZoneType.Hand]
-				)
-			}
-		};
-	}
-
 	function onFieldCardsDataReceived(updatedFieldCards: CardFieldZoneType) {
 		fieldCards = {
 			...updatedFieldCards,
-			...keepCardZonePlaceLocalGameState(CardZonePlaceType.HostPlayer, updatedFieldCards),
-			...keepCardZonePlaceLocalGameState(CardZonePlaceType.InvitedPlayer, updatedFieldCards)
+			[CardZonePlaceType.HostPlayer]: {
+				...updatedFieldCards[CardZonePlaceType.HostPlayer],
+				[CardZoneType.Hand]: keepCardLocalGameState(
+					updatedFieldCards[CardZonePlaceType.HostPlayer][CardZoneType.Hand],
+					fieldCards[CardZonePlaceType.HostPlayer][CardZoneType.Hand]
+				)
+			},
+			[CardZonePlaceType.InvitedPlayer]: {
+				...updatedFieldCards[CardZonePlaceType.InvitedPlayer],
+				[CardZoneType.Hand]: keepCardLocalGameState(
+					updatedFieldCards[CardZonePlaceType.InvitedPlayer][CardZoneType.Hand],
+					fieldCards[CardZonePlaceType.InvitedPlayer][CardZoneType.Hand]
+				)
+			}
 		};
 		console.log({ fieldCards });
 	}
