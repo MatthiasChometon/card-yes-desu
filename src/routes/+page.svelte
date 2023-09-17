@@ -10,12 +10,10 @@
 	import type { PlayableCard } from '../types/playable-card.type';
 	import type { PlayersConnectionSendedDataType } from '../types/players-connection-sended-data.type';
 	import { CardZoneType } from '../enums/card-zone-type.enum';
-	import type { PlayerCardZoneType } from '../types/player-card-zone.type';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
-	let localFieldCards: CardFieldZoneType = getDefaultCardFieldZone();
 	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived);
 	let opponentCardIdsRevealed: string[] = [];
 	let opponentHandRevealed: boolean = false;
@@ -141,7 +139,7 @@
 		bind:playersConnection={$playersConnection}
 		connectToCreatedGame={playersConnection.connectToCreatedGame}
 		style="flex: 6;"
-		bind:fieldCards={localFieldCards}
+		bind:fieldCards
 	/>
 	{#if $playersConnection.isHost !== null}
 		<GameZones
@@ -163,7 +161,7 @@
 			extraMonsterZonesRightZoneIndex={$playersConnection.isHost ? 1 : 0}
 			aspectRatio={cardRatio}
 			style="flex: 8;"
-			bind:fieldCards={localFieldCards}
+			bind:fieldCards
 		/>
 	{/if}
 </div>
