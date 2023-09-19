@@ -5,5 +5,4 @@ export interface PlayersConnectionSendedDataType {
   fieldCards: CardFieldZoneType | null
   cardToReveal: PlayableCard | null
   revealHand: boolean | null
-  hideHand: boolean | null
 }

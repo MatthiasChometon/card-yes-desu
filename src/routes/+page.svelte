@@ -30,14 +30,15 @@
 	}
 
 	function onDataReceived(data: PlayersConnectionSendedDataType) {
-		const { fieldCards: updatedFieldCards, cardToReveal, revealHand, hideHand } = data;
+		const { fieldCards: updatedFieldCards, cardToReveal, revealHand } = data;
 		if (updatedFieldCards !== null) onFieldCardsDataReceived(updatedFieldCards);
 		if (cardToReveal !== null) opponentCardIdsRevealed = [...opponentCardIdsRevealed, cardToReveal.id];
-		if (revealHand !== null) opponentHandRevealed = true;
-		if (hideHand !== null) {
+		if (revealHand === null) return;
+		if (!revealHand) {
 			opponentHandRevealed = false;
 			opponentCardIdsRevealed = [];
 		}
+		opponentHandRevealed = true;
 	}
 
 	function keepCardLocalGameState(onlineCards: PlayableCard[], localCards: PlayableCard[]) {
@@ -71,19 +72,19 @@
 	}
 
 	function updateOpponentFieldBoard() {
-		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: null, hideHand: null });
+		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: null });
 	}
 
 	function onHideHand(): void {
-		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: false, hideHand: null });
+		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: false });
 	}
 
 	function onHandReveal(): void {
-		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: true, hideHand: null });
+		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: true });
 	}
 
 	function onCardReveal(card: PlayableCard): void {
-		playersConnection.sendData({ fieldCards, cardToReveal: card, revealHand: null, hideHand: null });
+		playersConnection.sendData({ fieldCards, cardToReveal: card, revealHand: null });
 	}
 
 	onMount(async () => {
@@ -96,8 +97,10 @@
 
 	function hideOpponentHand(cards: PlayableCard[]): PlayableCard[] {
 		const cardsWithHiddenCards = cards.map((card) => {
+			console.log({ opponentHandRevealed });
 			if (opponentHandRevealed) return { ...card, gameState: { faceUp: true, rotation: 0 } };
 			const faceUp = opponentCardIdsRevealed.includes(card.id);
+			console.log(faceUp);
 			return { ...card, gameState: { faceUp, rotation: 0 } };
 		});
 
@@ -120,6 +123,7 @@
 		};
 
 		if (opponentCardZonePlaceType !== null) {
+			console.log('trrr');
 			newField = {
 				...newField,
 				[opponentCardZonePlaceType]: {
