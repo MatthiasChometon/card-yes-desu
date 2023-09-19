@@ -37,8 +37,9 @@
 		if (!revealHand) {
 			opponentHandRevealed = false;
 			opponentCardIdsRevealed = [];
+		} else {
+			opponentHandRevealed = true;
 		}
-		opponentHandRevealed = true;
 	}
 
 	function keepCardLocalGameState(onlineCards: PlayableCard[], localCards: PlayableCard[]) {
