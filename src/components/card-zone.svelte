@@ -2,8 +2,6 @@
 	import { dndzone } from 'svelte-dnd-action';
 	import Card from './card.svelte';
 	import type { PlayableCard } from '../types/playable-card.type';
-	import type { GameCardState } from '../types/game-card-state.type';
-	import { updateSubObject } from '../services/updateSubObject';
 	import type { DragAndDropHoverOrDropEvent } from '../types/drag-and-drop-hover-or-drop-event';
 	import ModalGameMenu from './modal-game-menu.svelte';
 	import { ContextMenu } from '../store/context-menu.store';
@@ -99,6 +97,7 @@
 	showMenu={$contextMenu.showMenu}
 	position={$contextMenu.position}
 	menuItems={getMenuItems()}
+	style="top: auto;"
 />
 {#if showCardListModal}
 	<CardListModal bind:cards bind:showCardListModal />
