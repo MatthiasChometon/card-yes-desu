@@ -47,6 +47,7 @@
 
 <div style="width: 100%; height: 100%; flex: 3; display: flex; {boxStyle}">
 	<CardZone
+		bind:cardClicked
 		{onCardChangingPosition}
 		{menuItems}
 		bind:cards
