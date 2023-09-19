@@ -2,12 +2,16 @@
 	import { clickOutside } from '../services/click-outside';
 	import type { ContextMenuItem } from '../types/context-menu-item.type';
 
-	export let menuItems: ContextMenuItem[], onClose: () => void, showMenu: boolean, position: { x: number; y: number };
+	export let menuItems: ContextMenuItem[],
+		onClose: () => void,
+		showMenu: boolean,
+		position: { x: number; y: number },
+		style: string = '';
 </script>
 
 {#if showMenu && menuItems.length > 0}
 	<nav
-		style="position: fixed; top:{position.y}px; left:{position.x}px; z-index: 1000;"
+		style="position: fixed; top:{position.y}px; left:{position.x}px; z-index: 1000; {style}"
 		use:clickOutside
 		on:outsideClick={() => {
 			onClose();
