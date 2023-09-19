@@ -43,7 +43,6 @@
 	}
 
 	function keepCardLocalGameState(onlineCards: PlayableCard[], localCards: PlayableCard[]) {
-		console.log({ onlineCards });
 		return onlineCards.map((card) => {
 			const localCardFounded = localCards.find((localCard) => localCard.id === card.id);
 			if (localCardFounded === undefined) return card;
@@ -69,7 +68,6 @@
 				)
 			}
 		};
-		console.log({ fieldCards });
 	}
 
 	function updateOpponentFieldBoard() {
@@ -98,10 +96,8 @@
 
 	function hideOpponentHand(cards: PlayableCard[]): PlayableCard[] {
 		const cardsWithHiddenCards = cards.map((card) => {
-			console.log({ opponentHandRevealed });
 			if (opponentHandRevealed) return { ...card, gameState: { faceUp: true, rotation: 0 } };
 			const faceUp = opponentCardIdsRevealed.includes(card.id);
-			console.log(faceUp);
 			return { ...card, gameState: { faceUp, rotation: 0 } };
 		});
 
@@ -124,7 +120,6 @@
 		};
 
 		if (opponentCardZonePlaceType !== null) {
-			console.log('trrr');
 			newField = {
 				...newField,
 				[opponentCardZonePlaceType]: {
