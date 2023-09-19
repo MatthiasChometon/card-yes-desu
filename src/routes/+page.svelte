@@ -31,7 +31,7 @@
 
 	function onDataReceived(data: PlayersConnectionSendedDataType) {
 		const { fieldCards: updatedFieldCards, cardToReveal, revealHand } = data;
-		if (updatedFieldCards !== null) onFieldCardsDataReceived(fieldCards, updatedFieldCards);
+		if (updatedFieldCards !== null) fieldCards = onFieldCardsDataReceived(fieldCards, updatedFieldCards);
 		if (cardToReveal !== null) opponentCardIdsRevealed = [...opponentCardIdsRevealed, cardToReveal.id];
 		if (revealHand === null) return;
 		if (!revealHand) {
