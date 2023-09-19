@@ -9,7 +9,7 @@
 	import GameZones from '../components/game-zones.svelte';
 	import type { PlayableCard } from '../types/playable-card.type';
 	import type { PlayersConnectionSendedDataType } from '../types/players-connection-sended-data.type';
-	import { CardZoneType } from '../enums/card-zone-type.enum';
+	import { onFieldCardsDataReceived } from '../services/on-field-cards-data-received';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
@@ -31,7 +31,7 @@
 
 	function onDataReceived(data: PlayersConnectionSendedDataType) {
 		const { fieldCards: updatedFieldCards, cardToReveal, revealHand } = data;
-		if (updatedFieldCards !== null) onFieldCardsDataReceived(updatedFieldCards);
+		if (updatedFieldCards !== null) onFieldCardsDataReceived(fieldCards, updatedFieldCards);
 		if (cardToReveal !== null) opponentCardIdsRevealed = [...opponentCardIdsRevealed, cardToReveal.id];
 		if (revealHand === null) return;
 		if (!revealHand) {
@@ -40,34 +40,6 @@
 		} else {
 			opponentHandRevealed = true;
 		}
-	}
-
-	function keepCardLocalGameState(onlineCards: PlayableCard[], localCards: PlayableCard[]) {
-		return onlineCards.map((card) => {
-			const localCardFounded = localCards.find((localCard) => localCard.id === card.id);
-			if (localCardFounded === undefined) return card;
-			return { ...card, gameState: { ...card.gameState, ...localCardFounded.gameState } };
-		});
-	}
-
-	function onFieldCardsDataReceived(updatedFieldCards: CardFieldZoneType) {
-		fieldCards = {
-			...updatedFieldCards,
-			[CardZonePlaceType.HostPlayer]: {
-				...updatedFieldCards[CardZonePlaceType.HostPlayer],
-				[CardZoneType.Hand]: keepCardLocalGameState(
-					updatedFieldCards[CardZonePlaceType.HostPlayer][CardZoneType.Hand],
-					fieldCards[CardZonePlaceType.HostPlayer][CardZoneType.Hand]
-				)
-			},
-			[CardZonePlaceType.InvitedPlayer]: {
-				...updatedFieldCards[CardZonePlaceType.InvitedPlayer],
-				[CardZoneType.Hand]: keepCardLocalGameState(
-					updatedFieldCards[CardZonePlaceType.InvitedPlayer][CardZoneType.Hand],
-					fieldCards[CardZonePlaceType.InvitedPlayer][CardZoneType.Hand]
-				)
-			}
-		};
 	}
 
 	function updateOpponentFieldBoard() {
