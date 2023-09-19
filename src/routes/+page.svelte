@@ -95,9 +95,8 @@
 	}
 
 	function hideOpponentHand(cards: PlayableCard[]): PlayableCard[] {
-		if (opponentHandRevealed) return cards;
-
 		const cardsWithHiddenCards = cards.map((card) => {
+			if (opponentHandRevealed) return { ...card, gameState: { faceUp: true, rotation: 0 } };
 			const faceUp = opponentCardIdsRevealed.includes(card.id);
 			return { ...card, gameState: { faceUp, rotation: 0 } };
 		});
