@@ -20,8 +20,10 @@
 		canShuffle: boolean = false,
 		menuItems: ContextMenuItem[] = [],
 		onCardDrop: () => void = () => {},
+		customHandleConsider: ((event: DragAndDropHoverOrDropEvent<PlayableCard[]>) => void) | null = null,
 		onCardChangingPosition: () => void = () => {},
 		onShuffleDeck: () => void = () => {},
+		dragDisabled: boolean = false,
 		cardClicked: PlayableCard | null = null;
 
 	let dropTargetStyle = { background: 'rgba(0, 0, 0, 0.2)' };
@@ -65,7 +67,8 @@
 		cards = items;
 	};
 
-	const handleFinalize = ({ detail: { items } }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
+	const handleDrop = ({ detail }: DragAndDropHoverOrDropEvent<PlayableCard[]>) => {
+		const { items } = detail;
 		cards = items;
 		onCardDrop();
 	};
@@ -73,9 +76,9 @@
 
 <div
 	style="width: 8.2%; height: 95%; display: flex; position: relative; {style}"
-	use:dndzone={{ items: cards, flipDurationMs: 150, dropTargetStyle }}
-	on:consider={handleConsider}
-	on:finalize={handleFinalize}
+	use:dndzone={{ items: cards, flipDurationMs: 150, dropTargetStyle, dragDisabled }}
+	on:consider={customHandleConsider !== null ? customHandleConsider : handleConsider}
+	on:finalize={handleDrop}
 	on:dblclick={() => {
 		showCardListModal = true;
 	}}

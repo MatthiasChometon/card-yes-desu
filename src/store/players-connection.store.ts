@@ -8,7 +8,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	const { subscribe, set, update } = writable<PlayersConnectionType>({
 		peer: null,
 		connection: null,
-		opponentPeerId: null,
+		opponentPeerId: 'toto',
 		playerPeerId: null,
 		isConnectedToOpponent: false,
 		isHost: null
