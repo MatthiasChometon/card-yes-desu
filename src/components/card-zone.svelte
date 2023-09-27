@@ -13,6 +13,7 @@
 	import CardListModal from './card-list-modal.svelte';
 
 	export let style: string = '',
+		noModalGameMenu: boolean = false,
 		cards: PlayableCard[] = [],
 		superimposed: boolean = false,
 		cardStyle: string = '',
@@ -95,13 +96,15 @@
 		/>
 	{/each}
 </div>
-<ModalGameMenu
-	onClose={contextMenu.onClose}
-	showMenu={$contextMenu.showMenu}
-	position={$contextMenu.position}
-	menuItems={getMenuItems()}
-	style="top: auto;"
-/>
+{#if !noModalGameMenu}
+	<ModalGameMenu
+		onClose={contextMenu.onClose}
+		showMenu={$contextMenu.showMenu}
+		position={$contextMenu.position}
+		menuItems={getMenuItems()}
+		style="top: auto;"
+	/>
+{/if}
 {#if showCardListModal}
 	<CardListModal bind:cards bind:showCardListModal />
 {/if}

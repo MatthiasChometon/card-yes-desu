@@ -9,8 +9,9 @@
 	async function setCards(): Promise<void> {
 		const date = $lastCardsReleaseDate === null ? null : new Date($lastCardsReleaseDate);
 		const response = await setAllCards(date);
-		notificationText =
-			response === null ? 'There was an error downloading last cards' : 'Last cards has been downloaded';
+		if (response === 'noDataToUpdate') return;
+		if (response === 'error') notificationText = 'There was an error downloading last cards';
+		if (response === 'dataUpdated') notificationText = 'Last cards has been downloaded';
 		showNotification = true;
 	}
 	onMount(() => {

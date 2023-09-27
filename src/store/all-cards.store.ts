@@ -6,13 +6,14 @@ import { localStorageStore } from "./local-storage-store.store";
 export const lastCardsReleaseDate = localStorageStore<string | null>('lastCardsReleaseDate', null);
 export const allCards = localStorageStore<StorageCardType[]>('allCards', []);
 
-export const setAllCards = async (fromDate: Date | null): Promise<void | null> => {
+export const setAllCards = async (fromDate: Date | null): Promise<'dataUpdated' | 'error' | 'noDataToUpdate'> => {
   const hasAllUpdatedCards: boolean = fromDate !== null && isToday(fromDate)
-  if (hasAllUpdatedCards) return
+  if (hasAllUpdatedCards) return 'noDataToUpdate'
 
   let option: Parameters<typeof getAllCardsFromApi>['0'] = { fromDate }
   const cards = await getAllCardsFromApi(option)
-  if (cards === null) return null
+  if (cards === null) return 'error'
+  if (cards.length === 0) return 'noDataToUpdate'
 
   let cardsDownloaded: StorageCardType[] = []
   cards.forEach(card => {
@@ -23,4 +24,5 @@ export const setAllCards = async (fromDate: Date | null): Promise<void | null> =
 
   allCards.update(allCards => [...allCards, ...cardsDownloaded])
   lastCardsReleaseDate.set(new Date().toString())
+  return 'dataUpdated'
 }

@@ -17,6 +17,7 @@ export async function getAllCardsFromApi ({ fromDate = null }: Options): Promise
   if (fromDate !== null) urlOptions += createFromDateToNowOption(fromDate)
 
   const response = await fetch(`https://db.ygoprodeck.com/api/v7/cardinfo.php?${urlOptions}`)
+  if (response.status === 400) return []
   if (response.status !== 200) return null
   const { data } = await response.json();
   return data
