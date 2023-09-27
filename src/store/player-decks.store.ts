@@ -1,11 +1,7 @@
-import { writable } from 'svelte/store'
-import { browser } from '$app/environment';
 import type { DeckType } from '../types/deck.type'
+import { localStorageStore } from './local-storage-store.store';
 
-const storageName = 'playerDecks'
-const initialValue = browser ? JSON.parse(window.localStorage.getItem(storageName) ?? '[]') ?? [] : [];
-
-export const playerDecks = writable<DeckType[]>(initialValue)
+export const playerDecks = localStorageStore<DeckType[]>('playerDecks', []);
 
 export const updateDeckByName = (deck: DeckType) => {
   playerDecks.update((decks) =>
@@ -25,8 +21,6 @@ export const updateDeckName = (deck: DeckType, lastDeckName: string) => {
   );
 }
 
-playerDecks.subscribe((decks) => {
-  if (browser) {
-    window.localStorage.setItem(storageName, JSON.stringify(decks));
-  }
-})
+export const addDeck = (deck: DeckType) => {
+  playerDecks.update((decks) => [...decks, structuredClone(deck)]);
+}

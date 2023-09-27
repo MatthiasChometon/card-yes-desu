@@ -105,34 +105,32 @@
 	}
 </script>
 
-<div style="height: 100vh; width: 100vw; display: flex; justify-content: flex-end;">
-	<GameInformation
-		bind:playersConnection={$playersConnection}
-		connectToCreatedGame={playersConnection.connectToCreatedGame}
-		style="flex: 6;"
+<GameInformation
+	bind:playersConnection={$playersConnection}
+	connectToCreatedGame={playersConnection.connectToCreatedGame}
+	style="flex: 6;"
+	bind:fieldCards
+/>
+{#if $playersConnection.isHost !== null}
+	<GameZones
+		{onHideHand}
+		{onHandReveal}
+		{onCardReveal}
+		onCardDraw={updateOpponentFieldBoard}
+		onShuffleDeck={updateOpponentFieldBoard}
+		onShuffleCard={updateOpponentFieldBoard}
+		onCardChangingPosition={updateOpponentFieldBoard}
+		onCardDrop={updateOpponentFieldBoard}
+		opponentCardZonePlaceType={!$playersConnection.isHost
+			? CardZonePlaceType.HostPlayer
+			: CardZonePlaceType.InvitedPlayer}
+		activePlayerCardZonePlaceType={$playersConnection.isHost
+			? CardZonePlaceType.HostPlayer
+			: CardZonePlaceType.InvitedPlayer}
+		extraMonsterZonesLeftZoneIndex={$playersConnection.isHost ? 0 : 1}
+		extraMonsterZonesRightZoneIndex={$playersConnection.isHost ? 1 : 0}
+		aspectRatio={cardRatio}
+		style="flex: 8;"
 		bind:fieldCards
 	/>
-	{#if $playersConnection.isHost !== null}
-		<GameZones
-			{onHideHand}
-			{onHandReveal}
-			{onCardReveal}
-			onCardDraw={updateOpponentFieldBoard}
-			onShuffleDeck={updateOpponentFieldBoard}
-			onShuffleCard={updateOpponentFieldBoard}
-			onCardChangingPosition={updateOpponentFieldBoard}
-			onCardDrop={updateOpponentFieldBoard}
-			opponentCardZonePlaceType={!$playersConnection.isHost
-				? CardZonePlaceType.HostPlayer
-				: CardZonePlaceType.InvitedPlayer}
-			activePlayerCardZonePlaceType={$playersConnection.isHost
-				? CardZonePlaceType.HostPlayer
-				: CardZonePlaceType.InvitedPlayer}
-			extraMonsterZonesLeftZoneIndex={$playersConnection.isHost ? 0 : 1}
-			extraMonsterZonesRightZoneIndex={$playersConnection.isHost ? 1 : 0}
-			aspectRatio={cardRatio}
-			style="flex: 8;"
-			bind:fieldCards
-		/>
-	{/if}
-</div>
+{/if}
