@@ -12,8 +12,8 @@
 - can reveal card, hand and hide hand ✅
 - can create deck ✅
 - import from api all cards ✅
+- on hover card to see details ✅
 
-- on hover card to see details
 - choose deck in battle
 
 # create-svelte
