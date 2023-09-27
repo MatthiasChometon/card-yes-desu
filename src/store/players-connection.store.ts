@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
 import type { PlayersConnectionType } from '../types/players-connection.type';
-import type Peer from 'peerjs';
 import type { Peerjs } from '../types/peerjs.type';
 import type { DataConnection } from 'peerjs';
 
@@ -14,9 +13,10 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void, onOp
 		isHost: null
 	});
 
-	async function getNewPeer (): Promise<Peer> {
+	async function initializeConnection (): Promise<void> {
 		const peerjs: Peerjs = await import('peerjs');
-		return new peerjs.Peer();
+		const peer = new peerjs.Peer();
+		update(state => ({ ...state, peer }));
 	}
 
 	function openConnection (connection: DataConnection): void {
@@ -31,17 +31,22 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void, onOp
 		});
 	}
 
-	function openGame (peer: Peer): void {
-		peer.on('open', function (playerPeerId: string) {
-			update(state => ({ ...state, playerPeerId }));
+	function createNewGame (): void {
+		update(state => {
+			const { peer } = state
+			if (peer === null) throw new Error("peer is null")
+			peer.on('open', function (playerPeerId: string) {
+				update(state => ({ ...state, playerPeerId }));
 
-			peer.on('connection', function (connection: DataConnection) {
-				console.log('an opponent connected to your game')
-				update(state => {
-					openConnection(connection);
-					return { ...state, connection, isHost: true }
+				peer.on('connection', function (connection: DataConnection) {
+					console.log('an opponent connected to your game')
+					update(state => {
+						openConnection(connection);
+						return { ...state, connection, isHost: true }
+					});
 				});
 			});
+			return state;
 		});
 	}
 
@@ -70,11 +75,8 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void, onOp
 		subscribe,
 		set,
 		connectToCreatedGame,
-		createNewGame: async () => {
-			const peer = await getNewPeer();
-			update(state => ({ ...state, peer }));
-			openGame(peer);
-		},
+		createNewGame,
+		initializeConnection,
 		sendData: (data: T) => {
 			sendData(data)
 		}

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { hideCard } from '../services/hide-card';
 	import { currentCardHover } from '../store/current-card-hover.store';
 	import type { ClientPosition } from '../types/client-position';
 	import type { PlayableCard } from '../types/playable-card.type';
@@ -13,8 +14,8 @@
 
 <div
 	style="width: 100%; height: 100%; {style}"
-	on:mouseover={currentCardHover.set(card)}
-	on:focus={currentCardHover.set(card)}
+	on:mouseover={currentCardHover.set({ ...card, gameState: { ...card.gameState, rotation: 0 } })}
+	on:focus={currentCardHover.set({ ...card, gameState: { ...card.gameState, rotation: 0 } })}
 	tabindex="0"
 	role="button"
 >

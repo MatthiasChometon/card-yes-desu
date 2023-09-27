@@ -13,7 +13,7 @@
 	import { currentCardHover } from '../store/current-card-hover.store';
 	import { playerDecks } from '../store/player-decks.store';
 	import type { DeckType } from '../types/deck.type';
-	import { hideCards } from '../services/hide-playable-cards';
+	import { hideCards } from '../services/hide-cards';
 	import { setInitialDeckList } from '../services/set-initial-deck-list';
 	import { notification } from '../store/notification.store';
 
@@ -141,6 +141,10 @@
 
 		fieldCards = newField;
 	}
+
+	onMount(() => {
+		playersConnection.initializeConnection();
+	});
 </script>
 
 <GameInformation
