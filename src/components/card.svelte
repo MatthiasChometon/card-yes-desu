@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { currentCardHover } from '../store/current-card-hover.store';
 	import type { ClientPosition } from '../types/client-position';
 	import type { PlayableCard } from '../types/playable-card.type';
 
@@ -10,7 +11,13 @@
 	$: pictureDisplayed = card.gameState.faceUp ? card.frontPicture : card.backPicture;
 </script>
 
-<div style="width: 100%; height: 100%; {style}">
+<div
+	style="width: 100%; height: 100%; {style}"
+	on:mouseover={currentCardHover.set(card)}
+	on:focus={currentCardHover.set(card)}
+	tabindex="0"
+	role="button"
+>
 	<div
 		style="
 		background-image: url({pictureDisplayed});

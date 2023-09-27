@@ -5,6 +5,8 @@
 	import type { PlayableCard } from '../types/playable-card.type';
 	import ConnectPlayersOnline from './connect-players-online.svelte';
 	import type { PlayersConnectionType } from '../types/players-connection.type';
+	import { currentCardHover } from '../store/current-card-hover.store';
+	import Card from './card.svelte';
 
 	export let style = '',
 		fieldCards: CardFieldZoneType,
@@ -100,4 +102,7 @@
 		}}>Reset</button
 	>
 	<ConnectPlayersOnline bind:playersConnection {connectToCreatedGame} />
+	{#if $currentCardHover !== null}
+		<Card card={$currentCardHover} style="position: relative; padding: 2%;" />
+	{/if}
 </div>

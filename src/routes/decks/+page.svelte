@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { CardRotation } from '../../enums/card-rotation.enum';
 	import type { PlayableCard } from '../../types/playable-card.type';
 	import CardZoneForDeckCreation from '../../components/deck-creation/card-zone-for-deck-creation.svelte';
 	import { handleDragAndDropConsiderCopy } from '../../services/handle-drag-and-drop-consider-copy';
@@ -15,6 +14,8 @@
 	} from '../../store/player-decks.store';
 	import { allCards } from '../../store/all-cards.store';
 	import { createPlayableCard } from '../../services/create-playable-card';
+	import { currentCardHover } from '../../store/current-card-hover.store';
+	import Card from '../../components/card.svelte';
 
 	let cardSearchInput: string = '';
 	let selectedDeckName: string | null = null;
@@ -85,6 +86,11 @@
 	}
 </script>
 
+<div style="display: flex; flex: 1;">
+	{#if $currentCardHover !== null}
+		<Card card={$currentCardHover} style="position: relative; padding: 2%;" />
+	{/if}
+</div>
 <div style="flex: 2; margin: 1%; display: flex; flex-direction: column;">
 	<div style="flex: 1; display: flex; align-items: center;">
 		<h1>Deck :</h1>
