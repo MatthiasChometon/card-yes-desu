@@ -19,7 +19,7 @@
 	});
 </script>
 
-<div style="display: flex; width: 100%; height: 100vh; justify-content: flex-end;">
+<div style="display: flex; width: 100%; height: 100vh; justify-content: flex-end; overflow: hidden;">
 	<slot />
 	<Notification isVisible={showNotification}>{notificationText}</Notification>
 </div>

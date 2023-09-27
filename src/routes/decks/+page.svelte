@@ -16,6 +16,8 @@
 	import { createPlayableCard } from '../../services/create-playable-card';
 	import { currentCardHover } from '../../store/current-card-hover.store';
 	import Card from '../../components/card.svelte';
+	import RedirectionList from '../../components/redirection-list.svelte';
+	import SelectDeck from '../../components/select-deck.svelte';
 
 	let cardSearchInput: string = '';
 	let selectedDeckName: string | null = null;
@@ -57,12 +59,6 @@
 		removeDeckByName(deck.name);
 	}
 
-	function onDeckSelect({ target: { value } }: { target: { value: string } }): void {
-		const foundDeck = $playerDecks.find((playerDeck) => playerDeck.name === value);
-		if (foundDeck === undefined) throw new Error('Deck not found');
-		deck = foundDeck;
-	}
-
 	function getPageNumberList(cardsNotPaginated: PlayableCard[]): number[] {
 		const numberOfPages = Math.ceil(cardsNotPaginated.length / numberOfCardsPerPage);
 		pageNumberList = [...Array(numberOfPages).keys()].map((pageNumber) => pageNumber + 1);
@@ -86,7 +82,8 @@
 	}
 </script>
 
-<div style="display: flex; flex: 1;">
+<div style="flex: 1;">
+	<RedirectionList redirectionContainerStyle="padding: 2%;" />
 	{#if $currentCardHover !== null}
 		<Card card={$currentCardHover} style="position: relative; padding: 2%;" />
 	{/if}
@@ -96,15 +93,7 @@
 		<h1>Deck :</h1>
 		<input style="margin-left: 1%; margin-top: 0.5%; font-size: 1.6rem;" type="text" bind:value={deck.name} />
 		{#if $playerDecks.length > 0}
-			<select
-				style="margin-left: 1%; margin-top: 0.5%; width: 20%; padding: 0.3%; font-size: 1.2rem;"
-				bind:value={selectedDeckName}
-				on:change={onDeckSelect}
-			>
-				{#each $playerDecks as playerDeck (playerDeck.name)}
-					<option value={playerDeck.name}>{playerDeck.name}</option>
-				{/each}
-			</select>
+			<SelectDeck bind:selectedDeckName playerDecks={$playerDecks} bind:deck />
 		{/if}
 		<button style="padding: 0.3%; margin-left: 1%; margin-top: 5px; font-size: 1.2rem;" on:click={saveDeck}>save</button
 		>

@@ -10,6 +10,9 @@
 	import type { PlayableCard } from '../types/playable-card.type';
 	import type { PlayersConnectionSendedDataType } from '../types/players-connection-sended-data.type';
 	import { onFieldCardsDataReceived } from '../services/on-field-cards-data-received';
+	import { currentCardHover } from '../store/current-card-hover.store';
+	import { playerDecks } from '../store/player-decks.store';
+	import type { DeckType } from '../types/deck.type';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
@@ -18,6 +21,9 @@
 	let opponentCardIdsRevealed: string[] = [];
 	let opponentHandRevealed: boolean = false;
 	let opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer | null = null;
+	let deck: DeckType | null = null;
+
+	currentCardHover.set(null);
 
 	$: {
 		if ($playersConnection.isHost === null) opponentCardZonePlaceType = null;
@@ -103,34 +109,48 @@
 
 		fieldCards = newField;
 	}
+
+	$: {
+		if (!$playersConnection.isConnectedToOpponent && deck !== null) {
+			fieldCards = {
+				...fieldCards,
+				[CardZonePlaceType.InvitedPlayer]: {
+					...fieldCards[CardZonePlaceType.InvitedPlayer],
+					Deck: hideCards(deck.Deck),
+					ExtraDeck: hideCards(deck.ExtraDeck),
+					SideDeck: hideCards(deck.SideDeck)
+				}
+			};
+		}
+	}
 </script>
 
 <GameInformation
+	disableSelectDeck={$playersConnection.isConnectedToOpponent}
 	bind:playersConnection={$playersConnection}
 	connectToCreatedGame={playersConnection.connectToCreatedGame}
 	style="flex: 6;"
+	bind:deck
+	playerDecks={$playerDecks}
+/>
+<GameZones
+	{onHideHand}
+	{onHandReveal}
+	{onCardReveal}
+	onCardDraw={updateOpponentFieldBoard}
+	onShuffleDeck={updateOpponentFieldBoard}
+	onShuffleCard={updateOpponentFieldBoard}
+	onCardChangingPosition={updateOpponentFieldBoard}
+	onCardDrop={updateOpponentFieldBoard}
+	opponentCardZonePlaceType={!$playersConnection.isHost
+		? CardZonePlaceType.HostPlayer
+		: CardZonePlaceType.InvitedPlayer}
+	activePlayerCardZonePlaceType={$playersConnection.isHost
+		? CardZonePlaceType.HostPlayer
+		: CardZonePlaceType.InvitedPlayer}
+	extraMonsterZonesLeftZoneIndex={$playersConnection.isHost ? 0 : 1}
+	extraMonsterZonesRightZoneIndex={$playersConnection.isHost ? 1 : 0}
+	aspectRatio={cardRatio}
+	style="flex: 8;"
 	bind:fieldCards
 />
-{#if $playersConnection.isHost !== null}
-	<GameZones
-		{onHideHand}
-		{onHandReveal}
-		{onCardReveal}
-		onCardDraw={updateOpponentFieldBoard}
-		onShuffleDeck={updateOpponentFieldBoard}
-		onShuffleCard={updateOpponentFieldBoard}
-		onCardChangingPosition={updateOpponentFieldBoard}
-		onCardDrop={updateOpponentFieldBoard}
-		opponentCardZonePlaceType={!$playersConnection.isHost
-			? CardZonePlaceType.HostPlayer
-			: CardZonePlaceType.InvitedPlayer}
-		activePlayerCardZonePlaceType={$playersConnection.isHost
-			? CardZonePlaceType.HostPlayer
-			: CardZonePlaceType.InvitedPlayer}
-		extraMonsterZonesLeftZoneIndex={$playersConnection.isHost ? 0 : 1}
-		extraMonsterZonesRightZoneIndex={$playersConnection.isHost ? 1 : 0}
-		aspectRatio={cardRatio}
-		style="flex: 8;"
-		bind:fieldCards
-	/>
-{/if}
