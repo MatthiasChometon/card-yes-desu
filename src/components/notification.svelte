@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition';
-	export let isVisible: boolean = false;
+	import { notification, setNotificationIsVisible } from '../store/notification.store';
 
 	$: {
-		if (isVisible) {
+		if ($notification.isVisible) {
 			setTimeout(() => {
-				isVisible = false;
+				setNotificationIsVisible(false);
 			}, 3000);
 		}
 	}
 </script>
 
-{#if isVisible}
+{#if $notification.isVisible}
 	<div
 		in:fade
 		out:fade={{ duration: 400 }}

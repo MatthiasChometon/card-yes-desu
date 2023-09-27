@@ -15,6 +15,7 @@
 	import type { DeckType } from '../types/deck.type';
 	import { hideCards } from '../services/hide-playable-cards';
 	import { setInitialDeckList } from '../services/set-initial-deck-list';
+	import { notification } from '../store/notification.store';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
@@ -66,6 +67,7 @@
 	}
 
 	function onOpenConnection(): void {
+		if (deck === null) throw new Error('Deck is null');
 		playersConnection.sendData({ fieldCards: null, cardToReveal: null, revealHand: null, initialOpponentDeck: deck });
 	}
 
@@ -85,9 +87,21 @@
 		playersConnection.sendData({ fieldCards, cardToReveal: card, revealHand: null, initialOpponentDeck: null });
 	}
 
-	onMount(async () => {
+	async function createYourGame(): Promise<void> {
+		if (deck === null) {
+			notification.set({ text: 'You need to select a deck', isVisible: true });
+			return;
+		}
 		await playersConnection.createNewGame();
-	});
+	}
+
+	function connectToCreatedGame(): void {
+		if (deck === null) {
+			notification.set({ text: 'You need to select a deck', isVisible: true });
+			return;
+		}
+		playersConnection.connectToCreatedGame();
+	}
 
 	function hideOpponentHand(cards: PlayableCard[]): PlayableCard[] {
 		const cardsWithHiddenCards = cards.map((card) => {
@@ -132,7 +146,8 @@
 <GameInformation
 	disableSelectDeck={$playersConnection.isConnectedToOpponent}
 	bind:playersConnection={$playersConnection}
-	connectToCreatedGame={playersConnection.connectToCreatedGame}
+	{createYourGame}
+	{connectToCreatedGame}
 	style="flex: 6;"
 	bind:deck
 	playerDecks={$playerDecks}
