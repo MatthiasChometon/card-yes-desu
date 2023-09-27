@@ -13,30 +13,47 @@
 	import { currentCardHover } from '../store/current-card-hover.store';
 	import { playerDecks } from '../store/player-decks.store';
 	import type { DeckType } from '../types/deck.type';
+	import { hideCards } from '../services/hide-playable-cards';
+	import { setInitialDeckList } from '../services/set-initial-deck-list';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
-	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived);
+	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived, onOpenConnection);
 	let opponentCardIdsRevealed: string[] = [];
 	let opponentHandRevealed: boolean = false;
 	let opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer | null = null;
+	let activePlayerCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer | null = null;
 	let deck: DeckType | null = null;
 
 	currentCardHover.set(null);
 
 	$: {
-		if ($playersConnection.isHost === null) opponentCardZonePlaceType = null;
+		if ($playersConnection.isHost === null) {
+			opponentCardZonePlaceType = null;
+			activePlayerCardZonePlaceType = null;
+		}
 
 		if ($playersConnection.isHost !== null) {
 			opponentCardZonePlaceType = !$playersConnection.isHost
+				? CardZonePlaceType.HostPlayer
+				: CardZonePlaceType.InvitedPlayer;
+			activePlayerCardZonePlaceType = $playersConnection.isHost
 				? CardZonePlaceType.HostPlayer
 				: CardZonePlaceType.InvitedPlayer;
 		}
 	}
 
 	function onDataReceived(data: PlayersConnectionSendedDataType) {
-		const { fieldCards: updatedFieldCards, cardToReveal, revealHand } = data;
+		const { fieldCards: updatedFieldCards, cardToReveal, revealHand, initialOpponentDeck } = data;
+		if (initialOpponentDeck !== null) {
+			if (deck === null || activePlayerCardZonePlaceType === null || opponentCardZonePlaceType === null) {
+				throw new Error('Deck is null');
+			}
+			const newFieldCards = setInitialDeckList(fieldCards, initialOpponentDeck, opponentCardZonePlaceType);
+			fieldCards = setInitialDeckList(newFieldCards, deck, activePlayerCardZonePlaceType);
+			return;
+		}
 		if (updatedFieldCards !== null) fieldCards = onFieldCardsDataReceived(fieldCards, updatedFieldCards);
 		if (cardToReveal !== null) opponentCardIdsRevealed = [...opponentCardIdsRevealed, cardToReveal.id];
 		if (revealHand === null) return;
@@ -48,29 +65,29 @@
 		}
 	}
 
+	function onOpenConnection(): void {
+		playersConnection.sendData({ fieldCards: null, cardToReveal: null, revealHand: null, initialOpponentDeck: deck });
+	}
+
 	function updateOpponentFieldBoard() {
-		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: null });
+		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: null, initialOpponentDeck: null });
 	}
 
 	function onHideHand(): void {
-		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: false });
+		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: false, initialOpponentDeck: null });
 	}
 
 	function onHandReveal(): void {
-		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: true });
+		playersConnection.sendData({ fieldCards, cardToReveal: null, revealHand: true, initialOpponentDeck: null });
 	}
 
 	function onCardReveal(card: PlayableCard): void {
-		playersConnection.sendData({ fieldCards, cardToReveal: card, revealHand: null });
+		playersConnection.sendData({ fieldCards, cardToReveal: card, revealHand: null, initialOpponentDeck: null });
 	}
 
 	onMount(async () => {
 		await playersConnection.createNewGame();
 	});
-
-	function hideCards(cards: PlayableCard[]): PlayableCard[] {
-		return cards.map((card) => ({ ...card, gameState: { faceUp: false, rotation: 0 } }));
-	}
 
 	function hideOpponentHand(cards: PlayableCard[]): PlayableCard[] {
 		const cardsWithHiddenCards = cards.map((card) => {
@@ -108,20 +125,6 @@
 		}
 
 		fieldCards = newField;
-	}
-
-	$: {
-		if (!$playersConnection.isConnectedToOpponent && deck !== null) {
-			fieldCards = {
-				...fieldCards,
-				[CardZonePlaceType.InvitedPlayer]: {
-					...fieldCards[CardZonePlaceType.InvitedPlayer],
-					Deck: hideCards(deck.Deck),
-					ExtraDeck: hideCards(deck.ExtraDeck),
-					SideDeck: hideCards(deck.SideDeck)
-				}
-			};
-		}
 	}
 </script>
 

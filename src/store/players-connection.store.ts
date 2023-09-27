@@ -4,7 +4,7 @@ import type Peer from 'peerjs';
 import type { Peerjs } from '../types/peerjs.type';
 import type { DataConnection } from 'peerjs';
 
-export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
+export function PlayersConnection<T> (onDataReceived: (newData: T) => void, onOpenConnection: () => void) {
 	const { subscribe, set, update } = writable<PlayersConnectionType>({
 		peer: null,
 		connection: null,
@@ -22,6 +22,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	function openConnection (connection: DataConnection): void {
 		connection.on('open', function () {
 			update(state => ({ ...state, isConnectedToOpponent: true }));
+			onOpenConnection();
 
 			connection.on('data', function (data: unknown) {
 				console.log('Received', data);
