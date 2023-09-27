@@ -8,9 +8,9 @@ export function setInitialDeckList (fieldCards: CardFieldZoneType, deck: DeckTyp
     ...fieldCards,
     [cardZonePlaceType]: {
       ...fieldCards[cardZonePlaceType],
-      Deck: hideCards(deck.Deck),
-      ExtraDeck: hideCards(deck.ExtraDeck),
-      SideDeck: hideCards(deck.SideDeck)
+      Deck: deck.Deck,
+      ExtraDeck: deck.ExtraDeck,
+      SideDeck: deck.SideDeck
     }
   };
 }
