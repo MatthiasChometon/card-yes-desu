@@ -12,11 +12,10 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void, onOp
 		isHost: null
 	});
 	const { subscribe, set, update } = store;
-	let peer: Peer | null = null;
 
-	async function initializeConnection (): Promise<void> {
+	async function initializeConnection (): Promise<Peer> {
 		const peerjs: Peerjs = await import('peerjs');
-		peer = new peerjs.Peer();
+		return new peerjs.Peer();
 	}
 
 	function openConnection (connection: DataConnection): void {
@@ -31,7 +30,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void, onOp
 		});
 	}
 
-	function createNewGame (): void {
+	function createNewGame (peer: Peer): void {
 		if (peer === null) throw new Error("peer is null")
 		peer.on('open', function (playerPeerId: string) {
 			update(state => ({ ...state, playerPeerId }));
@@ -47,7 +46,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void, onOp
 		});
 	}
 
-	function connectToCreatedGame (): void {
+	function connectToCreatedGame (peer: Peer): void {
 		update(state => {
 			const { opponentPeerId } = state;
 			if (opponentPeerId === null || peer === null) throw new Error("opponentPeerId or peer is null");
@@ -71,8 +70,14 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void, onOp
 	return {
 		subscribe,
 		set,
-		connectToCreatedGame,
-		createNewGame,
+		connectToCreatedGame: async () => {
+			const peer = await initializeConnection();
+			connectToCreatedGame(peer);
+		},
+		createNewGame: async () => {
+			const peer = await initializeConnection();
+			createNewGame(peer);
+		},
 		initializeConnection,
 		sendData: (data: T) => {
 			sendData(data)
