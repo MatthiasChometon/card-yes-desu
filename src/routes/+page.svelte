@@ -105,12 +105,13 @@
 			HostPlayer: {
 				...fieldCards.HostPlayer,
 				Deck: hideCards(fieldCards.HostPlayer.Deck),
-				ExtraDeck: hideCards(fieldCards.HostPlayer.ExtraDeck)
+				ExtraDeck: hideCards(fieldCards.HostPlayer.ExtraDeck),
+				Side: hideCards(fieldCards.HostPlayer.SideDeck)
 			},
 			InvitedPlayer: {
 				...fieldCards.InvitedPlayer,
 				Deck: hideCards(fieldCards.InvitedPlayer.Deck),
-				ExtraDeck: hideCards(fieldCards.InvitedPlayer.ExtraDeck)
+				Side: hideCards(fieldCards.InvitedPlayer.SideDeck)
 			}
 		};
 
