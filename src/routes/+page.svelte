@@ -15,12 +15,11 @@
 	import type { DeckType } from '../types/deck.type';
 	import { hideCards } from '../services/hide-cards';
 	import { setInitialDeckList } from '../services/set-initial-deck-list';
-	import { notification } from '../store/notification.store';
 
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
-	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived, onOpenConnection);
+	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived);
 	let opponentCardIdsRevealed: string[] = [];
 	let opponentHandRevealed: boolean = false;
 	let opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer | null = null;
@@ -87,22 +86,6 @@
 		playersConnection.sendData({ fieldCards, cardToReveal: card, revealHand: null, initialOpponentDeck: null });
 	}
 
-	async function createYourGame(): Promise<void> {
-		if (deck === null) {
-			notification.set({ text: 'You need to select a deck', isVisible: true });
-			return;
-		}
-		await playersConnection.createNewGame();
-	}
-
-	function connectToCreatedGame(): void {
-		if (deck === null) {
-			notification.set({ text: 'You need to select a deck', isVisible: true });
-			return;
-		}
-		playersConnection.connectToCreatedGame();
-	}
-
 	function hideOpponentHand(cards: PlayableCard[]): PlayableCard[] {
 		const cardsWithHiddenCards = cards.map((card) => {
 			if (opponentHandRevealed) return { ...card, gameState: { faceUp: true, rotation: 0 } };
@@ -143,15 +126,15 @@
 	}
 
 	onMount(() => {
-		playersConnection.initializeConnection();
+		playersConnection.createNewGame();
 	});
 </script>
 
 <GameInformation
 	disableSelectDeck={$playersConnection.isConnectedToOpponent}
 	bind:playersConnection={$playersConnection}
-	{createYourGame}
-	{connectToCreatedGame}
+	connectToCreatedGame={playersConnection.connectToCreatedGame}
+	createYourGame={playersConnection.createNewGame}
 	style="flex: 6;"
 	bind:deck
 	playerDecks={$playerDecks}

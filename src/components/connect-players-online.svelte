@@ -9,7 +9,7 @@
 	<div style="display: flex;">
 		<input type="text" bind:value={playersConnection.opponentPeerId} />
 		<button on:click={connectToCreatedGame}>Connect</button>
-		<button on:click={createYourGame}>Create your game</button>
+		<button on:click={createYourGame}>Create new connection</button>
 	</div>
 	<p>Connected with opponent: {playersConnection.isConnectedToOpponent ? 'yes' : 'no'}</p>
 
