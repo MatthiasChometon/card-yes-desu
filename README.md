@@ -16,6 +16,11 @@
 - choose deck in battle ✅
 - play with custom cards ✅
 
+- add custom cinematic for battles
+- change to have pretty site
+- refactoring with more components
+- refactoring in modules
+
 # create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
