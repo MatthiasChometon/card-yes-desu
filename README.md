@@ -13,8 +13,8 @@
 - can create deck ✅
 - import from api all cards ✅
 - on hover card to see details ✅
-
-- choose deck in battle
+- choose deck in battle ✅
+- play with custom cards ✅
 
 # create-svelte
 
