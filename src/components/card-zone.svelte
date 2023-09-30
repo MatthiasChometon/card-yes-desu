@@ -13,6 +13,7 @@
 	import CardListModal from './card-list-modal.svelte';
 
 	export let style: string = '',
+		modalGameMenuStyle: string = '',
 		noModalGameMenu: boolean = false,
 		cards: PlayableCard[] = [],
 		superimposed: boolean = false,
@@ -102,7 +103,7 @@
 		showMenu={$contextMenu.showMenu}
 		position={$contextMenu.position}
 		menuItems={getMenuItems()}
-		style="top: auto;"
+		style={modalGameMenuStyle}
 	/>
 {/if}
 {#if showCardListModal}

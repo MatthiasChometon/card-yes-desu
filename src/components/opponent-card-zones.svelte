@@ -14,6 +14,7 @@
 
 <div style="flex: 1; display: flex; width: 100%; margin-top: 1.7%;">
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		menuItems={deckMenuItems}
@@ -25,36 +26,42 @@
 		style="margin-left: 2.1%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[0]}
 		style="margin-left: 12.2%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[1]}
 		style="margin-left: 3.5%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[2]}
 		style="margin-left: 3.5%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[3]}
 		style="margin-left: 3.5%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].SpellTrapZone[4]}
 		style="margin-left: 3.4%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].ExtraDeck}
@@ -65,6 +72,7 @@
 </div>
 <div style="flex: 1; display: flex; width: 100%;">
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].Graveyard}
@@ -73,6 +81,7 @@
 		style="margin-left: 2.1%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].Banished}
@@ -81,36 +90,42 @@
 		style="margin-left: 1.8%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[0]}
 		style="margin-left: 2.2%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[1]}
 		style="margin-left: 3.5%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[2]}
 		style="margin-left: 3.4%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[3]}
 		style="margin-left: 3.5%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].MonsterField[4]}
 		style="margin-left: 3.4%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].SideDeck}
@@ -119,6 +134,7 @@
 		style="margin-left: 2.5%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].FieldSpellZone}

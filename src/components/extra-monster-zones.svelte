@@ -11,12 +11,14 @@
 
 <div style="flex: 1; display: flex; width: 100%;">
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone.ExtraMonsterZone[leftZoneIndex]}
 		style="margin-left: 34.4%; margin-top: 0.2%;"
 	/>
 	<CardZone
+		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone.ExtraMonsterZone[rightZoneIndex]}

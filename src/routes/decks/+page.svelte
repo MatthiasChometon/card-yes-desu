@@ -12,18 +12,22 @@
 		updateDeckByName,
 		updateDeckName
 	} from '../../store/player-decks.store';
-	import { allCards } from '../../store/all-cards.store';
+	import { addCustomCardsFromFileList, allCards } from '../../store/all-cards.store';
 	import { createPlayableCard } from '../../services/create-playable-card';
 	import { currentCardHover } from '../../store/current-card-hover.store';
 	import Card from '../../components/card.svelte';
 	import RedirectionList from '../../components/redirection-list.svelte';
 	import SelectDeck from '../../components/select-deck.svelte';
+	import type { ContextMenuItem } from '../../types/context-menu-item.type';
 
 	let cardSearchInput: string = '';
 	let selectedDeckName: string | null = null;
 	let numberOfCardsPerPage: number = 50;
 	let page: number = 1;
 	let pageNumberList: number[] = [];
+	let customCardsFromInput: FileList | null = null;
+	let displayOnlyCustomCards: boolean = false;
+	let cardClickedOnSearchCards: PlayableCard | null = null;
 	let deck: DeckType = {
 		name: '',
 		[CardZoneType.Deck]: [],
@@ -65,6 +69,27 @@
 		return pageNumberList;
 	}
 
+	async function addCustomCards(): Promise<void> {
+		if (customCardsFromInput === null) return;
+		await addCustomCardsFromFileList(customCardsFromInput);
+		const fileInput = document.getElementById('customCardsFromInput') as HTMLInputElement;
+		fileInput.value = '';
+	}
+
+	const deleteCustomCardMenuItems: ContextMenuItem[] = [
+		{
+			displayText: 'Delete',
+			onClick: () => {
+				if (cardClickedOnSearchCards === null) throw new Error("card to delete can't be null");
+				allCards.update((allCards) => {
+					const cardIndex = allCards.findIndex(({ picture }) => picture === cardClickedOnSearchCards!.frontPicture);
+					allCards.splice(cardIndex, 1);
+					return allCards;
+				});
+			}
+		}
+	];
+
 	$: numberOfMainDeckCards = deck.Deck.length;
 	$: numberOfExtraDeckCards = deck.ExtraDeck.length;
 	$: numberOfSideDeckCards = deck.SideDeck.length;
@@ -73,7 +98,10 @@
 		end: page * numberOfCardsPerPage
 	};
 	$: {
-		const newSearchCardsNotPaginated = $allCards
+		let allCardsCopy = structuredClone($allCards);
+		if (displayOnlyCustomCards) allCardsCopy = allCardsCopy.filter(({ isCustom }) => isCustom);
+
+		const newSearchCardsNotPaginated = allCardsCopy
 			.filter((card) => card.name.toLowerCase().includes(cardSearchInput.toLowerCase()))
 			.map(({ picture, name }) => createPlayableCard({ frontPicture: picture, name }));
 		pageNumberList = getPageNumberList(newSearchCardsNotPaginated);
@@ -121,16 +149,55 @@
 	<div style="flex: 1;">
 		<h1>Search cards</h1>
 		<input type="text" bind:value={cardSearchInput} />
+		<label for="displayOnlyCustomCards">display only custom cards:</label>
+		<input
+			type="checkbox"
+			id="displayOnlyCustomCards"
+			bind:checked={displayOnlyCustomCards}
+			on:change={() => {
+				page = 1;
+			}}
+		/>
 	</div>
 	<CardZoneForDeckCreation
 		{handleCardConsider}
+		noModalGameMenu={!displayOnlyCustomCards}
+		menuItems={deleteCustomCardMenuItems}
 		bind:cards={searchCards}
+		bind:cardClicked={cardClickedOnSearchCards}
 		cardStyle="width: 20%;"
 		cardZoneContainerStyle="flex: 12;"
 	/>
-	<select style="margin-top: 0.5%; width: 20%; padding: 0.3%; font-size: 1.2rem;" bind:value={page}>
-		{#each pageNumberList as pageNumber}
-			<option value={pageNumber}>{pageNumber}</option>
-		{/each}
-	</select>
+	<div style="display: flex; flex-direction: column;">
+		<div style="display: flex; justify-content: center; gap: 4%; margin: 1%;">
+			<button
+				style="padding: 0.3%; font-size: 1.2rem;"
+				on:click={() => {
+					if (page > 1) page--;
+				}}>previous</button
+			>
+			<select style="margin-top: 0.5%; width: 20%; padding: 0.3%; font-size: 1.2rem;" bind:value={page}>
+				{#each pageNumberList as pageNumber}
+					<option value={pageNumber}>{pageNumber}</option>
+				{/each}
+			</select>
+			<button
+				style="padding: 0.3%; font-size: 1.2rem;"
+				on:click={() => {
+					if (page < pageNumberList.length) page++;
+				}}>next</button
+			>
+		</div>
+		<div style="display: flex; justify-content: center; gap: 4%; margin: 1%;">
+			<label for="customCardsFromInput">Upload custom cards:</label>
+			<input
+				bind:files={customCardsFromInput}
+				on:change={addCustomCards}
+				accept="image/webp, image/jpeg, image/png, image/*"
+				id="customCardsFromInput"
+				multiple
+				type="file"
+			/>
+		</div>
+	</div>
 </div>
