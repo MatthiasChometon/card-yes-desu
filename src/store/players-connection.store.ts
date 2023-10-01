@@ -19,7 +19,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 
 	async function getNewPeer (): Promise<Peer> {
 		const peerjs: Peerjs = await import('peerjs');
-		return new peerjs.Peer('toto');
+		return new peerjs.Peer();
 	}
 
 	function openConnection (connection: DataConnection): void {
