@@ -11,7 +11,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	const defaultPlayersConnection: PlayersConnectionType = {
 		peer: null,
 		connection: null,
-		opponentPeerId: 'toto',
+		opponentPeerId: null,
 		playerPeerId: null,
 		isConnectedToOpponent: false,
 		isHost: null
@@ -21,7 +21,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 
 	async function getNewPeer (): Promise<Peer> {
 		const peerjs: Peerjs = await import('peerjs');
-		return new peerjs.Peer();
+		return new peerjs.Peer('toto');
 	}
 
 	function openConnection (connection: DataConnection): void {
@@ -38,6 +38,8 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 				onDataReceived(data as T);
 			});
 		});
+
+		connection.on('close', () => { disconnectPlayers(); });
 	}
 
 	function openGame (peer: Peer): void {
@@ -69,9 +71,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	function disconnectPlayers (): void {
 		update(state => {
 			const { connection, peer, playerPeerId } = state;
-			if (connection === null) return state;
-			connection.send({ hasToDisconnectPlayers: true });
-			connection.close();
+			if (connection !== null) connection.close();
 			return { ...defaultPlayersConnection, peer, playerPeerId }
 		})
 	}
@@ -80,8 +80,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 		update(state => {
 			const { connection } = state;
 			if (connection === null) throw new Error("connection is null");
-			const dataWithDisconnected = { ...data, hasToDisconnectPlayers: false };
-			connection.send(dataWithDisconnected);
+			connection.send(data);
 			return state;
 		});
 	}
@@ -104,8 +103,6 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 		set,
 		connectToCreatedGame,
 		createNewGame,
-		sendData: (data: T) => {
-			sendData(data)
-		}
+		sendData
 	};
 };
