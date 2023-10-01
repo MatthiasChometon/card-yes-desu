@@ -19,7 +19,6 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	const { subscribe, set, update } = playersConnection
 
 	async function getNewPeer (): Promise<Peer> {
-		disconnectPlayers();
 		const peerjs: Peerjs = await import('peerjs');
 		return new peerjs.Peer();
 	}
@@ -28,11 +27,11 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 		connection.on('open', function () {
 			update(state => ({ ...state, isConnectedToOpponent: true }));
 
-			connection.on('data', function (data: unknown) {
+			connection.on('data', async function (data: unknown) {
 				console.log('Received', data);
 				const { hasToDisconnectPlayers } = data as NewData<T>;
 				if (hasToDisconnectPlayers) {
-					disconnectPlayers();
+					createNewGame();
 					return
 				}
 				onDataReceived(data as T);
@@ -85,15 +84,18 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 		});
 	}
 
+	async function createNewGame (): Promise<void> {
+		disconnectPlayers();
+		const peer = await getNewPeer();
+		update(state => ({ ...state, peer }));
+		openGame(peer);
+	}
+
 	return {
 		subscribe,
 		set,
 		connectToCreatedGame,
-		createNewGame: async () => {
-			const peer = await getNewPeer();
-			update(state => ({ ...state, peer }));
-			openGame(peer);
-		},
+		createNewGame,
 		sendData: (data: T) => {
 			sendData(data)
 		}
