@@ -16,7 +16,7 @@
 		disableSelectDeck: boolean;
 </script>
 
-<div {style}>
+<div style="display: flex; flex-direction: column; {style}">
 	<SelectDeck
 		disabled={disableSelectDeck}
 		{playerDecks}
@@ -26,6 +26,6 @@
 	<RedirectionList />
 	<ConnectPlayersOnline bind:playersConnection {connectToCreatedGame} {closeConnection} />
 	{#if $currentCardHover !== null}
-		<Card card={$currentCardHover} style="position: relative; padding: 2%; height: auto; aspect-ratio: 0.69;" />
+		<Card card={$currentCardHover} style="position: relative; padding: 2%; aspect-ratio: 0.69;" />
 	{/if}
 </div>
