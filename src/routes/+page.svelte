@@ -19,7 +19,7 @@
 	const cardSize: CardSize = { height: 13.6, width: 9 };
 	const cardRatio: number = cardSize.height / cardSize.width;
 	let fieldCards: CardFieldZoneType = getDefaultCardFieldZone();
-	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived);
+	let playersConnection = PlayersConnection<PlayersConnectionSendedDataType>(onDataReceived, onOpenConnection);
 	let opponentCardIdsRevealed: string[] = [];
 	let opponentHandRevealed: boolean = false;
 	let opponentCardZonePlaceType: CardZonePlaceType.HostPlayer | CardZonePlaceType.InvitedPlayer | null = null;
