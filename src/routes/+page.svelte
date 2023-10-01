@@ -124,10 +124,6 @@
 
 		fieldCards = newField;
 	}
-
-	onMount(() => {
-		playersConnection.createNewGame();
-	});
 </script>
 
 <GameInformation

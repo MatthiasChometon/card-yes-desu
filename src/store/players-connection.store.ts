@@ -1,8 +1,9 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import type { PlayersConnectionType } from '../types/players-connection.type';
 import type Peer from 'peerjs';
 import type { Peerjs } from '../types/peerjs.type';
 import type { DataConnection } from 'peerjs';
+import { onMount } from 'svelte';
 
 type NewData<T> = T & { hasToDisconnectPlayers: boolean }
 
@@ -10,7 +11,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	const defaultPlayersConnection: PlayersConnectionType = {
 		peer: null,
 		connection: null,
-		opponentPeerId: null,
+		opponentPeerId: 'toto',
 		playerPeerId: null,
 		isConnectedToOpponent: false,
 		isHost: null
@@ -31,7 +32,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 				console.log('Received', data);
 				const { hasToDisconnectPlayers } = data as NewData<T>;
 				if (hasToDisconnectPlayers) {
-					createNewGame();
+					await createNewGame();
 					return
 				}
 				onDataReceived(data as T);
@@ -67,10 +68,11 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 
 	function disconnectPlayers (): void {
 		update(state => {
-			const { connection } = state;
+			const { connection, peer, playerPeerId } = state;
 			if (connection === null) return state;
 			connection.send({ hasToDisconnectPlayers: true });
-			return defaultPlayersConnection
+			connection.close();
+			return { ...defaultPlayersConnection, peer, playerPeerId }
 		})
 	}
 
@@ -86,10 +88,16 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 
 	async function createNewGame (): Promise<void> {
 		disconnectPlayers();
+		const { peer } = get(playersConnection)
+		if (peer === null) throw new Error("peer is null")
+		openGame(peer);
+	}
+
+	onMount(async () => {
 		const peer = await getNewPeer();
 		update(state => ({ ...state, peer }));
 		openGame(peer);
-	}
+	});
 
 	return {
 		subscribe,
