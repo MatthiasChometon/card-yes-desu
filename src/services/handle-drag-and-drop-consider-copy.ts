@@ -5,7 +5,6 @@ import { createRandomId } from "./create-random-id";
 
 interface ReturnType<ItemType extends { id: string, isDndShadowItem?: boolean }> {
   items: ItemType[];
-  itemCopied: null | ItemType;
 }
 
 export function handleDragAndDropConsiderCopy<ItemType extends { id: string, isDndShadowItem?: boolean }> ({ detail }: DragAndDropHoverOrDropEvent<ItemType[]>, items: ItemType[]): ReturnType<ItemType> {
@@ -13,9 +12,11 @@ export function handleDragAndDropConsiderCopy<ItemType extends { id: string, isD
 
   if (trigger === DragEvent.dragStarted) {
     const idx = items.findIndex(item => item.id === id);
-    detail.items = detail.items.filter(item => !item[SHADOW_ITEM_MARKER_PROPERTY_NAME]);
-    detail.items.splice(idx, 0, { ...items[idx], id: createRandomId() });
-    return { items: detail.items, itemCopied: items[idx] };
+    if (idx === -1) return { items: [...items] };
+    let newItems = structuredClone(detail.items)
+    newItems = newItems.filter(item => !item[SHADOW_ITEM_MARKER_PROPERTY_NAME]);
+    newItems.splice(idx, 0, { ...items[idx], id: createRandomId() });
+    return { items: newItems };
   }
-  return { items: [...items], itemCopied: null };
+  return { items: [...items] };
 }

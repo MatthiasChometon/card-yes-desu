@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { hideCard } from '../services/hide-card';
 	import { currentCardHover } from '../store/current-card-hover.store';
 	import type { ClientPosition } from '../types/client-position';
 	import type { PlayableCard } from '../types/playable-card.type';
