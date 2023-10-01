@@ -5,8 +5,6 @@ import type { Peerjs } from '../types/peerjs.type';
 import type { DataConnection } from 'peerjs';
 import { onMount } from 'svelte';
 
-type NewData<T> = T & { hasToDisconnectPlayers: boolean }
-
 export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	const defaultPlayersConnection: PlayersConnectionType = {
 		peer: null,
@@ -30,16 +28,11 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 
 			connection.on('data', async function (data: unknown) {
 				console.log('Received', data);
-				const { hasToDisconnectPlayers } = data as NewData<T>;
-				if (hasToDisconnectPlayers) {
-					await createNewGame();
-					return
-				}
 				onDataReceived(data as T);
 			});
 		});
 
-		connection.on('close', () => { disconnectPlayers(); });
+		connection.on('close', disconnectPlayers);
 	}
 
 	function openGame (peer: Peer): void {
