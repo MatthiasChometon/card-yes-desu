@@ -1,8 +1,10 @@
-import { get, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 import type { PlayersConnectionType } from '../types/players-connection.type';
 import type Peer from 'peerjs';
 import type { Peerjs } from '../types/peerjs.type';
 import type { DataConnection } from 'peerjs';
+
+type NewData<T> = T & { hasToDisconnectPlayers: boolean }
 
 export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	const defaultPlayersConnection: PlayersConnectionType = {
@@ -17,8 +19,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 	const { subscribe, set, update } = playersConnection
 
 	async function getNewPeer (): Promise<Peer> {
-		const { peer: lastPeer } = get(playersConnection);
-		if (lastPeer !== null) lastPeer.destroy();
+		disconnectPlayers();
 		const peerjs: Peerjs = await import('peerjs');
 		return new peerjs.Peer();
 	}
@@ -29,6 +30,11 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 
 			connection.on('data', function (data: unknown) {
 				console.log('Received', data);
+				const { hasToDisconnectPlayers } = data as NewData<T>;
+				if (hasToDisconnectPlayers) {
+					disconnectPlayers();
+					return
+				}
 				onDataReceived(data as T);
 			});
 		});
@@ -46,10 +52,6 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 				});
 			});
 		});
-		peer.on('disconnected', function () {
-			console.log('disconnected from peer server');
-			set(defaultPlayersConnection);
-		});
 	}
 
 	function connectToCreatedGame (): void {
@@ -64,11 +66,21 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 		);
 	}
 
+	function disconnectPlayers (): void {
+		update(state => {
+			const { connection } = state;
+			if (connection === null) return state;
+			connection.send({ hasToDisconnectPlayers: true });
+			return defaultPlayersConnection
+		})
+	}
+
 	function sendData (data: T): void {
 		update(state => {
 			const { connection } = state;
 			if (connection === null) throw new Error("connection is null");
-			connection.send(data);
+			const dataWithDisconnected = { ...data, hasToDisconnectPlayers: false };
+			connection.send(dataWithDisconnected);
 			return state;
 		});
 	}
