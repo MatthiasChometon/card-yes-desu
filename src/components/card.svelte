@@ -14,8 +14,10 @@
 
 <div
 	style="width: 100%; height: 100%; {style}"
-	on:mouseover={currentCardHover.set({ ...card, gameState: { ...card.gameState, rotation: 0 } })}
-	on:focus={currentCardHover.set({ ...card, gameState: { ...card.gameState, rotation: 0 } })}
+	on:mouseover={() => currentCardHover.set({ ...card, gameState: { ...card.gameState, rotation: 0 } })}
+	on:focus={() => currentCardHover.set({ ...card, gameState: { ...card.gameState, rotation: 0 } })}
+	on:blur={() => currentCardHover.set(null)}
+	on:mouseleave={() => currentCardHover.set(null)}
 	tabindex="0"
 	role="button"
 >

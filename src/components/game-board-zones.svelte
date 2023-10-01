@@ -42,7 +42,7 @@
 </script>
 
 <div
-	style="aspect-ratio: {aspectRatio}; width: 100%; height: 100%; position: relative; display: flex; align-items: center; flex-direction: column; {style}"
+	style="aspect-ratio: {aspectRatio}; width: 100%; position: relative; display: flex; align-items: center; flex-direction: column; {style}"
 >
 	<img
 		style="aspect-ratio: {aspectRatio}; height: 100%; position: absolute; z-index: -1;"

@@ -6,7 +6,7 @@
 
 <div style="display: flex; flex-direction: column;">
 	<p>Share my game: {playersConnection.playerPeerId}</p>
-	<div style="display: flex;">
+	<div style="display: flex; flex-wrap: wrap;">
 		<input type="text" bind:value={playersConnection.opponentPeerId} />
 		<button on:click={connectToCreatedGame}>Connect</button>
 		<button on:click={createYourGame}>Create new connection</button>

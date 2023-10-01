@@ -19,6 +19,7 @@
 	import RedirectionList from '../../components/redirection-list.svelte';
 	import SelectDeck from '../../components/select-deck.svelte';
 	import type { ContextMenuItem } from '../../types/context-menu-item.type';
+	import MediaQuery from '../../components/media-query.svelte';
 
 	let cardSearchInput: string = '';
 	let selectedDeckName: string | null = null;
@@ -110,94 +111,104 @@
 	}
 </script>
 
-<div style="flex: 1;">
-	<RedirectionList redirectionContainerStyle="padding: 2%;" />
-	{#if $currentCardHover !== null}
-		<Card card={$currentCardHover} style="position: relative; padding: 2%;" />
-	{/if}
-</div>
-<div style="flex: 2; margin: 1%; display: flex; flex-direction: column;">
-	<div style="flex: 1; display: flex; align-items: center;">
-		<h1>Deck :</h1>
-		<input style="margin-left: 1%; margin-top: 0.5%; font-size: 1.6rem;" type="text" bind:value={deck.name} />
-		{#if $playerDecks.length > 0}
-			<SelectDeck bind:selectedDeckName playerDecks={$playerDecks} bind:deck />
-		{/if}
-		<button style="padding: 0.3%; margin-left: 1%; margin-top: 5px; font-size: 1.2rem;" on:click={saveDeck}>save</button
-		>
-		<button style="padding: 0.3%; margin-left: 1%; margin-top: 5px; font-size: 1.2rem;" on:click={renameDeck}
-			>rename</button
-		>
-		<button style="padding: 0.3%; margin-left: 1%; margin-top: 5px; font-size: 1.2rem;" on:click={deleteDeck}
-			>delete</button
-		>
-	</div>
-	<div style="flex: 2; display: flex; flex-direction: column;">
-		<p style="flex: 1;">main deck ({numberOfMainDeckCards})</p>
-		<CardZoneForDeckCreation bind:cards={deck.Deck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
-	</div>
-	<div style="flex: 2; display: flex; flex-direction: column;">
-		<p style="flex: 1; margin-top: 1.5%;">extra deck ({numberOfExtraDeckCards})</p>
-		<CardZoneForDeckCreation bind:cards={deck.ExtraDeck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
-	</div>
-	<div style="flex: 2; display: flex; flex-direction: column;">
-		<p style="flex: 1; margin-top: 1.5%;">side deck ({numberOfSideDeckCards})</p>
-		<CardZoneForDeckCreation bind:cards={deck.SideDeck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
-	</div>
-</div>
-<div style="flex: 1; margin: 1%; display: flex; flex-direction: column;">
-	<div style="flex: 1;">
-		<h1>Search cards</h1>
-		<input type="text" bind:value={cardSearchInput} />
-		<label for="displayOnlyCustomCards">display only custom cards:</label>
-		<input
-			type="checkbox"
-			id="displayOnlyCustomCards"
-			bind:checked={displayOnlyCustomCards}
-			on:change={() => {
-				page = 1;
-			}}
+<MediaQuery query="(min-width: 800px)" let:matches>
+	{#if matches}
+		<div style="flex: 1;">
+			{#if $currentCardHover !== null}
+				<Card card={$currentCardHover} style="position: relative; padding: 2%;" />
+			{/if}
+		</div>
+	{:else if $currentCardHover !== null}
+		<Card
+			card={$currentCardHover}
+			style="position: absolute; padding: 2%; left: 0; width: 50%; background-color: rgba(0, 0, 0, 0.7);"
 		/>
-	</div>
-	<CardZoneForDeckCreation
-		{handleCardConsider}
-		noModalGameMenu={!displayOnlyCustomCards}
-		menuItems={deleteCustomCardMenuItems}
-		bind:cards={searchCards}
-		bind:cardClicked={cardClickedOnSearchCards}
-		cardStyle="width: 20%;"
-		cardZoneContainerStyle="flex: 12;"
-	/>
-	<div style="display: flex; flex-direction: column;">
-		<div style="display: flex; justify-content: center; gap: 4%; margin: 1%;">
-			<button
-				style="padding: 0.3%; font-size: 1.2rem;"
-				on:click={() => {
-					if (page > 1) page--;
-				}}>previous</button
+	{/if}
+	<div style="flex: 2; margin: 1%; display: flex; flex-direction: column;">
+		<RedirectionList />
+		<div style="flex: 1; display: flex; align-items: center; flex-wrap: wrap;">
+			<h1>Deck :</h1>
+			<input style="margin-left: 1%; margin-top: 0.5%; font-size: 1.6rem;" type="text" bind:value={deck.name} />
+			{#if $playerDecks.length > 0}
+				<SelectDeck bind:selectedDeckName playerDecks={$playerDecks} bind:deck />
+			{/if}
+			<button style="padding: 0.3%; margin-left: 1%; margin-top: 5px; font-size: 1.2rem;" on:click={saveDeck}
+				>save</button
 			>
-			<select style="margin-top: 0.5%; width: 20%; padding: 0.3%; font-size: 1.2rem;" bind:value={page}>
-				{#each pageNumberList as pageNumber}
-					<option value={pageNumber}>{pageNumber}</option>
-				{/each}
-			</select>
-			<button
-				style="padding: 0.3%; font-size: 1.2rem;"
-				on:click={() => {
-					if (page < pageNumberList.length) page++;
-				}}>next</button
+			<button style="padding: 0.3%; margin-left: 1%; margin-top: 5px; font-size: 1.2rem;" on:click={renameDeck}
+				>rename</button
+			>
+			<button style="padding: 0.3%; margin-left: 1%; margin-top: 5px; font-size: 1.2rem;" on:click={deleteDeck}
+				>delete</button
 			>
 		</div>
-		<div style="display: flex; justify-content: center; gap: 4%; margin: 1%;">
-			<label for="customCardsFromInput">Upload custom cards:</label>
+		<div style="flex: 2; display: flex; flex-direction: column;">
+			<p style="flex: 1;">main deck ({numberOfMainDeckCards})</p>
+			<CardZoneForDeckCreation bind:cards={deck.Deck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
+		</div>
+		<div style="flex: 2; display: flex; flex-direction: column;">
+			<p style="flex: 1; margin-top: 1.5%;">extra deck ({numberOfExtraDeckCards})</p>
+			<CardZoneForDeckCreation bind:cards={deck.ExtraDeck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
+		</div>
+		<div style="flex: 2; display: flex; flex-direction: column;">
+			<p style="flex: 1; margin-top: 1.5%;">side deck ({numberOfSideDeckCards})</p>
+			<CardZoneForDeckCreation bind:cards={deck.SideDeck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
+		</div>
+	</div>
+	<div style="flex: 1; margin: 1%; display: flex; flex-direction: column;">
+		<div style="flex: 1;">
+			<h1>Search cards</h1>
+			<input type="text" bind:value={cardSearchInput} />
+			<label for="displayOnlyCustomCards" style="white-space: nowrap;">display only custom cards:</label>
 			<input
-				bind:files={customCardsFromInput}
-				on:change={addCustomCards}
-				accept="image/webp, image/jpeg, image/png, image/*"
-				id="customCardsFromInput"
-				multiple
-				type="file"
+				type="checkbox"
+				id="displayOnlyCustomCards"
+				bind:checked={displayOnlyCustomCards}
+				on:change={() => {
+					page = 1;
+				}}
 			/>
 		</div>
+		<CardZoneForDeckCreation
+			{handleCardConsider}
+			noModalGameMenu={!displayOnlyCustomCards}
+			menuItems={deleteCustomCardMenuItems}
+			bind:cards={searchCards}
+			bind:cardClicked={cardClickedOnSearchCards}
+			cardStyle="width: 20%;"
+			cardZoneContainerStyle="flex: 12;"
+		/>
+		<div style="display: flex; flex-direction: column;">
+			<div style="display: flex; justify-content: center; gap: 4%; margin: 1%;">
+				<button
+					style="padding: 0.3%; font-size: 1.2rem;"
+					on:click={() => {
+						if (page > 1) page--;
+					}}>previous</button
+				>
+				<select style="margin-top: 0.5%; width: 20%; padding: 0.3%; font-size: 1.2rem;" bind:value={page}>
+					{#each pageNumberList as pageNumber}
+						<option value={pageNumber}>{pageNumber}</option>
+					{/each}
+				</select>
+				<button
+					style="padding: 0.3%; font-size: 1.2rem;"
+					on:click={() => {
+						if (page < pageNumberList.length) page++;
+					}}>next</button
+				>
+			</div>
+			<div style="display: flex; justify-content: center; gap: 4%; margin: 1%;">
+				<label for="customCardsFromInput">Upload custom cards:</label>
+				<input
+					bind:files={customCardsFromInput}
+					on:change={addCustomCards}
+					accept="image/webp, image/jpeg, image/png, image/*"
+					id="customCardsFromInput"
+					multiple
+					type="file"
+				/>
+			</div>
+		</div>
 	</div>
-</div>
+</MediaQuery>
