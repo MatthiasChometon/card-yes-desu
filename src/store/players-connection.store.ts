@@ -1,20 +1,24 @@
-import { writable } from 'svelte/store';
+import { get, writable } from 'svelte/store';
 import type { PlayersConnectionType } from '../types/players-connection.type';
 import type Peer from 'peerjs';
 import type { Peerjs } from '../types/peerjs.type';
 import type { DataConnection } from 'peerjs';
 
 export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
-	const { subscribe, set, update } = writable<PlayersConnectionType>({
+	const defaultPlayersConnection: PlayersConnectionType = {
 		peer: null,
 		connection: null,
 		opponentPeerId: null,
 		playerPeerId: null,
 		isConnectedToOpponent: false,
 		isHost: null
-	});
+	}
+	const playersConnection = writable<PlayersConnectionType>(defaultPlayersConnection);
+	const { subscribe, set, update } = playersConnection
 
 	async function getNewPeer (): Promise<Peer> {
+		const { peer: lastPeer } = get(playersConnection);
+		if (lastPeer !== null) lastPeer.destroy();
 		const peerjs: Peerjs = await import('peerjs');
 		return new peerjs.Peer();
 	}
@@ -41,6 +45,10 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 					return { ...state, connection, isHost: true }
 				});
 			});
+		});
+		peer.on('disconnected', function () {
+			console.log('disconnected from peer server');
+			set(defaultPlayersConnection);
 		});
 	}
 
