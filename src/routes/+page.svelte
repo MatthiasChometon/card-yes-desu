@@ -130,7 +130,7 @@
 	disableSelectDeck={$playersConnection.isConnectedToOpponent}
 	bind:playersConnection={$playersConnection}
 	connectToCreatedGame={playersConnection.connectToCreatedGame}
-	createYourGame={playersConnection.createNewGame}
+	closeConnection={playersConnection.closeConnection}
 	style="flex: 6;"
 	bind:deck
 	playerDecks={$playerDecks}

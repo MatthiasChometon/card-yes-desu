@@ -12,7 +12,7 @@
 		connectToCreatedGame: () => void,
 		playerDecks: DeckType[],
 		deck: DeckType | null,
-		createYourGame: () => void,
+		closeConnection: () => void,
 		disableSelectDeck: boolean;
 </script>
 
@@ -24,7 +24,7 @@
 		style="margin-left: 0%; margin-top: 0%; padding: 0%;"
 	/>
 	<RedirectionList />
-	<ConnectPlayersOnline bind:playersConnection {connectToCreatedGame} {createYourGame} />
+	<ConnectPlayersOnline bind:playersConnection {connectToCreatedGame} {closeConnection} />
 	{#if $currentCardHover !== null}
 		<Card card={$currentCardHover} style="position: relative; padding: 2%; height: auto; aspect-ratio: 0.69;" />
 	{/if}

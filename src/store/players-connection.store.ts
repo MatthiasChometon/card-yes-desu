@@ -32,7 +32,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 			});
 		});
 
-		connection.on('close', disconnectPlayers);
+		connection.on('close', closeConnection);
 	}
 
 	function openGame (peer: Peer): void {
@@ -61,7 +61,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 		);
 	}
 
-	function disconnectPlayers (): void {
+	function closeConnection (): void {
 		update(state => {
 			const { connection, peer, playerPeerId } = state;
 			if (connection !== null) connection.close();
@@ -78,13 +78,6 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 		});
 	}
 
-	async function createNewGame (): Promise<void> {
-		disconnectPlayers();
-		const { peer } = get(playersConnection)
-		if (peer === null) throw new Error("peer is null")
-		openGame(peer);
-	}
-
 	onMount(async () => {
 		const peer = await getNewPeer();
 		update(state => ({ ...state, peer }));
@@ -95,7 +88,7 @@ export function PlayersConnection<T> (onDataReceived: (newData: T) => void) {
 		subscribe,
 		set,
 		connectToCreatedGame,
-		createNewGame,
+		closeConnection,
 		sendData
 	};
 };
