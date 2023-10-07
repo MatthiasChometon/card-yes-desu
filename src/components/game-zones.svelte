@@ -32,6 +32,7 @@
 		boxStyle="align-items: flex-start;"
 		bind:cards={fieldCards[opponentCardZonePlaceType].Hand}
 		{onCardDrop}
+		hasCardListModal={false}
 	/>
 	<GameBoardZones
 		{onCardDraw}

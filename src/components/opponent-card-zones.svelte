@@ -23,6 +23,7 @@
 		superimposed
 		canShuffle
 		{onShuffleDeck}
+		hasCardListModal={false}
 		style="margin-left: 2.1%;"
 	/>
 	<CardZone
@@ -64,6 +65,7 @@
 		modalGameMenuStyle="top: auto;"
 		{onCardChangingPosition}
 		{onCardDrop}
+		hasCardListModal={false}
 		bind:cards={cardFieldZone[cardZonePlaceType].ExtraDeck}
 		superimposed
 		canChangePosition={false}
@@ -87,6 +89,7 @@
 		bind:cards={cardFieldZone[cardZonePlaceType].Banished}
 		superimposed
 		canChangePosition={false}
+		customCardFaceUp={null}
 		style="margin-left: 1.8%;"
 	/>
 	<CardZone
@@ -129,6 +132,7 @@
 		{onCardChangingPosition}
 		{onCardDrop}
 		bind:cards={cardFieldZone[cardZonePlaceType].SideDeck}
+		hasCardListModal={false}
 		superimposed
 		canChangePosition={false}
 		style="margin-left: 2.5%;"

@@ -6,6 +6,7 @@
 
 	export let cards: PlayableCard[] = [],
 		boxStyle: string = '',
+		hasCardListModal: boolean = true,
 		onCardDrop: () => void,
 		onCardChangingPosition: () => void,
 		onShuffleCard: () => void,
@@ -47,6 +48,7 @@
 
 <div style="width: 100%; height: 100%; flex: 3; display: flex; {boxStyle}">
 	<CardZone
+		{hasCardListModal}
 		modalGameMenuStyle="top: auto;"
 		bind:cardClicked
 		{onCardChangingPosition}

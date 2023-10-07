@@ -26,6 +26,8 @@
 		onCardChangingPosition: () => void = () => {},
 		onShuffleDeck: () => void = () => {},
 		dragDisabled: boolean = false,
+		hasCardListModal: boolean = true,
+		customCardFaceUp: null | boolean = true,
 		cardClicked: PlayableCard | null = null;
 
 	let dropTargetStyle = { background: 'rgba(0, 0, 0, 0.2)' };
@@ -82,6 +84,7 @@
 	on:consider={customHandleConsider !== null ? customHandleConsider : handleConsider}
 	on:finalize={handleDrop}
 	on:dblclick={() => {
+		if (!hasCardListModal) return;
 		showCardListModal = true;
 	}}
 	role="button"
@@ -106,6 +109,6 @@
 		style={modalGameMenuStyle}
 	/>
 {/if}
-{#if showCardListModal}
-	<CardListModal bind:cards bind:showCardListModal />
+{#if showCardListModal && hasCardListModal}
+	<CardListModal bind:cards bind:showCardListModal {customCardFaceUp} />
 {/if}

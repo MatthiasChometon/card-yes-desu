@@ -11,7 +11,10 @@
 	import { updateGameState } from '../services/update-game-state';
 	import type { ClientPosition } from '../types/client-position';
 
-	export let showCardListModal: boolean, cards: PlayableCard[];
+	export let showCardListModal: boolean,
+		cards: PlayableCard[],
+		customCardFaceUp: boolean | null = null,
+		hasModalGameMenu: boolean = true;
 	const contextMenu = ContextMenu();
 	let cardClicked: PlayableCard | null = null;
 
@@ -38,6 +41,13 @@
 			}
 		}));
 	}
+
+	$: {
+		cards = cards.map((card) => ({
+			...card,
+			gameState: { rotation: 0, faceUp: customCardFaceUp === null ? card.gameState.faceUp : customCardFaceUp }
+		}));
+	}
 </script>
 
 <div
@@ -55,9 +65,9 @@
 		tabindex="0"
 		style=" padding: 10px; flex-wrap: wrap; display: flex; width: 80%; height: 80%; background-color: rgba(0, 0, 0, 0.7); overflow-y: scroll;"
 	>
-		{#each cards as card, _index}
+		{#each cards as card (card.id)}
 			<Card
-				card={{ ...card, gameState: { faceUp: true, rotation: 0 } }}
+				{card}
 				onRightClick={(event) => {
 					onRightClick(event, card);
 				}}
@@ -66,12 +76,14 @@
 			/>
 		{/each}
 	</div>
-	<ModalGameMenu
-		onClose={() => {
-			contextMenu.onClose();
-		}}
-		showMenu={$contextMenu.showMenu}
-		position={$contextMenu.position}
-		menuItems={getMenuItems()}
-	/>
+	{#if !hasModalGameMenu}
+		<ModalGameMenu
+			onClose={() => {
+				contextMenu.onClose();
+			}}
+			showMenu={$contextMenu.showMenu}
+			position={$contextMenu.position}
+			menuItems={getMenuItems()}
+		/>
+	{/if}
 </div>
