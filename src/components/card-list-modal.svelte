@@ -42,11 +42,8 @@
 		}));
 	}
 
-	$: {
-		cards = cards.map((card) => ({
-			...card,
-			gameState: { rotation: 0, faceUp: customCardFaceUp === null ? card.gameState.faceUp : customCardFaceUp }
-		}));
+	function getCardFaceUp(faceUp: boolean): boolean {
+		return customCardFaceUp === null ? faceUp : customCardFaceUp;
 	}
 </script>
 
@@ -67,7 +64,7 @@
 	>
 		{#each cards as card (card.id)}
 			<Card
-				{card}
+				card={{ ...card, gameState: { ...card.gameState, faceUp: getCardFaceUp(card.gameState.faceUp) } }}
 				onRightClick={(event) => {
 					onRightClick(event, card);
 				}}
