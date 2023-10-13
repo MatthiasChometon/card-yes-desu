@@ -7,6 +7,7 @@
 	import { CardZoneType } from '../../enums/card-zone-type.enum';
 	import {
 		addDeck,
+		addDecks,
 		playerDecks,
 		removeDeckByName,
 		updateDeckByName,
@@ -20,13 +21,13 @@
 	import SelectDeck from '../../components/select-deck.svelte';
 	import type { ContextMenuItem } from '../../types/context-menu-item.type';
 	import MediaQuery from '../../components/media-query.svelte';
+	import ImportDeck from '../../components/import-deck.svelte';
 
 	let cardSearchInput: string = '';
 	let selectedDeckName: string | null = null;
 	let numberOfCardsPerPage: number = 50;
 	let page: number = 1;
 	let pageNumberList: number[] = [];
-	let customCardsFromInput: FileList | null = null;
 	let displayOnlyCustomCards: boolean = false;
 	let cardClickedOnSearchCards: PlayableCard | null = null;
 	let deck: DeckType = {
@@ -70,11 +71,9 @@
 		return pageNumberList;
 	}
 
-	async function addCustomCards(): Promise<void> {
-		if (customCardsFromInput === null) return;
-		await addCustomCardsFromFileList(customCardsFromInput);
-		const fileInput = document.getElementById('customCardsFromInput') as HTMLInputElement;
-		fileInput.value = '';
+	async function addCustomCards({ target: { files } }: { target: { files: FileList } }): Promise<void> {
+		if (files.length === 0) return;
+		await addCustomCardsFromFileList(files);
 	}
 
 	const deleteCustomCardMenuItems: ContextMenuItem[] = [
@@ -142,16 +141,16 @@
 				>delete</button
 			>
 		</div>
-		<div style="flex: 2; display: flex; flex-direction: column;">
-			<p style="flex: 1;">main deck ({numberOfMainDeckCards})</p>
+		<p>main deck ({numberOfMainDeckCards})</p>
+		<div style="flex: 6; display: flex; overflow-y: scroll;">
 			<CardZoneForDeckCreation bind:cards={deck.Deck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
 		</div>
-		<div style="flex: 2; display: flex; flex-direction: column;">
-			<p style="flex: 1; margin-top: 1.5%;">extra deck ({numberOfExtraDeckCards})</p>
+		<p style="margin-top: 1.5%;">extra deck ({numberOfExtraDeckCards})</p>
+		<div style="flex: 2; display: flex; overflow-y: scroll;">
 			<CardZoneForDeckCreation bind:cards={deck.ExtraDeck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
 		</div>
-		<div style="flex: 2; display: flex; flex-direction: column;">
-			<p style="flex: 1; margin-top: 1.5%;">side deck ({numberOfSideDeckCards})</p>
+		<p style="margin-top: 1.5%;">side deck ({numberOfSideDeckCards})</p>
+		<div style="flex: 2; display: flex; overflow-y: scroll;">
 			<CardZoneForDeckCreation bind:cards={deck.SideDeck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
 		</div>
 	</div>
@@ -176,7 +175,7 @@
 			bind:cards={searchCards}
 			bind:cardClicked={cardClickedOnSearchCards}
 			cardStyle="width: 20%;"
-			cardZoneContainerStyle="flex: 12;"
+			cardZoneContainerStyle="flex: 12; overflow-y: scroll;"
 		/>
 		<div style="display: flex; flex-direction: column;">
 			<div style="display: flex; justify-content: center; gap: 4%; margin: 1%;">
@@ -198,16 +197,18 @@
 					}}>next</button
 				>
 			</div>
-			<div style="display: flex; justify-content: center; gap: 4%; margin: 1%;">
-				<label for="customCardsFromInput">Upload custom cards:</label>
-				<input
-					bind:files={customCardsFromInput}
-					on:change={addCustomCards}
-					accept="image/webp, image/jpeg, image/png, image/*"
-					id="customCardsFromInput"
-					multiple
-					type="file"
-				/>
+			<div style="display: flex; justify-content: center; gap: 4%; margin: 1%; flex-direction: column;">
+				<div style="display: flex; margin-bottom: 1%;">
+					<label for="customCardsFromInput">Upload custom cards:</label>
+					<input
+						on:change={addCustomCards}
+						accept="image/webp, image/jpeg, image/png, image/*"
+						id="customCardsFromInput"
+						multiple
+						type="file"
+					/>
+				</div>
+				<ImportDeck onDecksImport={addDecks} />
 			</div>
 		</div>
 	</div>

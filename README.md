@@ -15,11 +15,12 @@
 - on hover card to see details ✅
 - choose deck in battle ✅
 - play with custom cards ✅
+- import ydk and convert in decks ✅
 
-- add custom cinematic for battles
 - change to have pretty site
 - refactoring with more components
 - refactoring in modules
+- add custom cinematic for battles
 
 # create-svelte
 

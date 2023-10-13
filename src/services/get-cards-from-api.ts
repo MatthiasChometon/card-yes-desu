@@ -12,7 +12,7 @@ function createFromDateToNowOption (fromDate: Date): string {
   return `&startdate=${fromDateFormatted}&enddate=${now}`
 }
 
-export async function getAllCardsFromApi ({ fromDate = null }: Options): Promise<YgoprodeckApiCardType[] | null> {
+export async function getCardsFromApi ({ fromDate = null }: Options): Promise<YgoprodeckApiCardType[] | null> {
   let urlOptions = ''
   if (fromDate !== null) urlOptions += createFromDateToNowOption(fromDate)
 

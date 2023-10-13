@@ -1,4 +1,4 @@
-import { get, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 import type { PlayersConnectionType } from '../types/players-connection.type';
 import type Peer from 'peerjs';
 import type { Peerjs } from '../types/peerjs.type';

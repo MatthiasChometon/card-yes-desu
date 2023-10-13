@@ -1,12 +1,12 @@
 import { CardRotation } from "../enums/card-rotation.enum"
 import type { PlayableCard } from "../types/playable-card.type"
-import { createRandomId } from "./create-random-id"
+import { createRandomStringId } from "./create-random-string-id"
 
 export function createPlayableCard (card: { frontPicture: string, name: string }): PlayableCard {
   const { frontPicture, name } = card
 
   return {
-    id: createRandomId(),
+    id: createRandomStringId(),
     name,
     frontPicture,
     backPicture: 'back-card.png',

@@ -24,3 +24,7 @@ export const updateDeckName = (deck: DeckType, lastDeckName: string) => {
 export const addDeck = (deck: DeckType) => {
   playerDecks.update((decks) => [...decks, structuredClone(deck)]);
 }
+
+export const addDecks = (newDecks: DeckType[]) => {
+  playerDecks.update((decks) => [...decks, ...structuredClone(newDecks)]);
+}
