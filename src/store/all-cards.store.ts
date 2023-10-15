@@ -1,5 +1,3 @@
-import { convertFileListToNamesAndResultsUrl } from "../services/convert-file-list-to-names-and-results-url";
-import { createRandomNumberId } from "../services/create-random-number-id";
 import { getCardsFromApi } from "../services/get-cards-from-api";
 import { isToday } from "../services/is-today";
 import type { StorageCardType } from "../types/storage-card.type";
@@ -7,12 +5,6 @@ import { localStorageStore } from "./local-storage-store.store";
 
 export const lastCardsReleaseDate = localStorageStore<string | null>('lastCardsReleaseDate', null);
 export const allCards = localStorageStore<StorageCardType[]>('allCards', []);
-
-export const addCustomCardsFromFileList = async (fileList: FileList) => {
-  const files = await convertFileListToNamesAndResultsUrl(fileList)
-  const newCustomCards: StorageCardType[] = files.map(({ result, name }) => ({ picture: result, name, isCustom: true, id: createRandomNumberId() }))
-  allCards.update(allCards => [...allCards, ...newCustomCards])
-}
 
 export const setAllCards = async (fromDate: Date | null): Promise<'dataUpdated' | 'error' | 'noDataToUpdate'> => {
   const hasAllUpdatedCards: boolean = fromDate !== null && isToday(fromDate)

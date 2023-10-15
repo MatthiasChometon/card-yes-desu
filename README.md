@@ -16,6 +16,7 @@
 - choose deck in battle ✅
 - play with custom cards ✅
 - import ydk and convert in decks ✅
+- import custom cards ✅
 
 - change to have pretty site
 - refactoring with more components

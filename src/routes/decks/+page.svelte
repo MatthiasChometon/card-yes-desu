@@ -13,7 +13,6 @@
 		updateDeckByName,
 		updateDeckName
 	} from '../../store/player-decks.store';
-	import { addCustomCardsFromFileList, allCards } from '../../store/all-cards.store';
 	import { createPlayableCard } from '../../services/create-playable-card';
 	import { currentCardHover } from '../../store/current-card-hover.store';
 	import Card from '../../components/card.svelte';
@@ -22,6 +21,12 @@
 	import type { ContextMenuItem } from '../../types/context-menu-item.type';
 	import MediaQuery from '../../components/media-query.svelte';
 	import ImportDeck from '../../components/import-deck.svelte';
+	import { allCards } from '../../store/all-cards.store';
+	import { enhance } from '$app/forms';
+	import type { StorageCardType } from '../../types/storage-card.type';
+	import { uploadFiles } from '../../services/upload-files';
+	import { createStorageCardsWithLocalUrlPicture } from '../../services/create-storage-cards-with-local-url-picture';
+	import { deleteFileFromStorage } from '../../services/delete-file-from-storage';
 
 	let cardSearchInput: string = '';
 	let selectedDeckName: string | null = null;
@@ -37,6 +42,7 @@
 		[CardZoneType.SideDeck]: []
 	};
 	let searchCards: PlayableCard[] = [];
+	let cardsToUpload: StorageCardType[] = [];
 
 	function handleCardConsider(event: DragAndDropHoverOrDropEvent<PlayableCard[]>) {
 		const { items } = handleDragAndDropConsiderCopy(event, searchCards);
@@ -71,24 +77,42 @@
 		return pageNumberList;
 	}
 
-	async function addCustomCards({ target: { files } }: { target: { files: FileList } }): Promise<void> {
-		if (files.length === 0) return;
-		await addCustomCardsFromFileList(files);
-	}
-
 	const deleteCustomCardMenuItems: ContextMenuItem[] = [
 		{
 			displayText: 'Delete',
 			onClick: () => {
-				if (cardClickedOnSearchCards === null) throw new Error("card to delete can't be null");
 				allCards.update((allCards) => {
 					const cardIndex = allCards.findIndex(({ picture }) => picture === cardClickedOnSearchCards!.frontPicture);
 					allCards.splice(cardIndex, 1);
+					deleteFileFromStorage(allCards[cardIndex].picture);
 					return allCards;
 				});
 			}
 		}
 	];
+
+	async function addStorageCardsWithLocalUrlPicture(files: File[]): Promise<void> {
+		const cards = await createStorageCardsWithLocalUrlPicture(files);
+		cardsToUpload = [...cardsToUpload, ...cards];
+	}
+
+	async function addCustomCards({ target: { files: fileList } }: { target: { files: FileList } }): Promise<void> {
+		if (fileList.length === 0) return;
+		const files = Array.from(fileList);
+
+		const [filesUploaded] = await Promise.all([uploadFiles(files), addStorageCardsWithLocalUrlPicture(files)]);
+
+		const cards = structuredClone(cardsToUpload).map((card) => {
+			const fileUploaded = filesUploaded.find((file) => file.name === card.name);
+			if (fileUploaded === undefined) return card;
+			return { ...card, picture: fileUploaded.result };
+		});
+
+		allCards.update((allCards) => {
+			cardsToUpload = [];
+			return [...allCards, ...cards];
+		});
+	}
 
 	$: numberOfMainDeckCards = deck.Deck.length;
 	$: numberOfExtraDeckCards = deck.ExtraDeck.length;
@@ -98,7 +122,7 @@
 		end: page * numberOfCardsPerPage
 	};
 	$: {
-		let allCardsCopy = structuredClone($allCards);
+		let allCardsCopy = structuredClone([...$allCards, ...cardsToUpload]);
 		if (displayOnlyCustomCards) allCardsCopy = allCardsCopy.filter(({ isCustom }) => isCustom);
 
 		const newSearchCardsNotPaginated = allCardsCopy
@@ -199,14 +223,17 @@
 			</div>
 			<div style="display: flex; justify-content: center; gap: 4%; margin: 1%; flex-direction: column;">
 				<div style="display: flex; margin-bottom: 1%;">
-					<label for="customCardsFromInput">Upload custom cards:</label>
-					<input
-						on:change={addCustomCards}
-						accept="image/webp, image/jpeg, image/png, image/*"
-						id="customCardsFromInput"
-						multiple
-						type="file"
-					/>
+					<form method="POST" action="/decks" use:enhance enctype="multipart/form-data">
+						<label for="customCardsFromInput">Upload custom cards:</label>
+						<input
+							accept="image/webp, image/jpeg, image/png, image/*"
+							id="customCardsFromInput"
+							name="files"
+							multiple
+							type="file"
+							on:change={addCustomCards}
+						/>
+					</form>
 				</div>
 				<ImportDeck onDecksImport={addDecks} />
 			</div>

@@ -12,15 +12,12 @@ function getFromLocalStorage<T> (isBrowser: boolean, initialValue: T, storageKey
 
 export function localStorageStore<T> (storageKey: string, initialValue: T): Writable<T> {
   const isBrowser: boolean = typeof window !== 'undefined';
-
   const storedValue = getFromLocalStorage(isBrowser, initialValue, storageKey)
-
   const store = writable<T>(storedValue);
 
   store.subscribe(($store) => {
-    if (isBrowser) {
-      localStorage.setItem(storageKey, JSON.stringify($store));
-    }
+    if (!isBrowser) return
+    localStorage.setItem(storageKey, JSON.stringify($store));
   });
 
   return store;
