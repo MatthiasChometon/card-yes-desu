@@ -17,7 +17,7 @@
 		dragDisabled: boolean = false;
 </script>
 
-<div on:scroll={onScroll} style="width: 100%; background-color: rgba(0, 0, 0, 0.2); {cardZoneContainerStyle}">
+<div on:scroll={onScroll} style="width: 100%; {cardZoneContainerStyle}">
 	<CardZone
 		style="height: 100%; width: 100%; display: flex; flex-wrap: wrap; align-content: flex-start; {cardZoneStyle}"
 		cardStyle="position: relative; margin-left: 0; box-sizing: border-box; height: auto; aspect-ratio: 0.69; {cardStyle}"

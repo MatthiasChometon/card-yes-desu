@@ -83,8 +83,8 @@
 			onClick: () => {
 				allCards.update((allCards) => {
 					const cardIndex = allCards.findIndex(({ picture }) => picture === cardClickedOnSearchCards!.frontPicture);
-					allCards.splice(cardIndex, 1);
 					deleteFileFromStorage(allCards[cardIndex].picture);
+					allCards.splice(cardIndex, 1);
 					return allCards;
 				});
 			}
@@ -166,15 +166,15 @@
 			>
 		</div>
 		<p>main deck ({numberOfMainDeckCards})</p>
-		<div style="flex: 6; display: flex; overflow-y: scroll;">
+		<div style="flex: 6; display: flex; overflow-y: scroll; background-color: rgba(0, 0, 0, 0.2);">
 			<CardZoneForDeckCreation bind:cards={deck.Deck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
 		</div>
 		<p style="margin-top: 1.5%;">extra deck ({numberOfExtraDeckCards})</p>
-		<div style="flex: 2; display: flex; overflow-y: scroll;">
+		<div style="flex: 2; display: flex; overflow-y: scroll; background-color: rgba(0, 0, 0, 0.2);">
 			<CardZoneForDeckCreation bind:cards={deck.ExtraDeck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
 		</div>
 		<p style="margin-top: 1.5%;">side deck ({numberOfSideDeckCards})</p>
-		<div style="flex: 2; display: flex; overflow-y: scroll;">
+		<div style="flex: 2; display: flex; overflow-y: scroll; background-color: rgba(0, 0, 0, 0.2);">
 			<CardZoneForDeckCreation bind:cards={deck.SideDeck} cardStyle="width: 10%;" cardZoneContainerStyle="flex: 5;" />
 		</div>
 	</div>
@@ -199,7 +199,7 @@
 			bind:cards={searchCards}
 			bind:cardClicked={cardClickedOnSearchCards}
 			cardStyle="width: 20%;"
-			cardZoneContainerStyle="flex: 12; overflow-y: scroll;"
+			cardZoneContainerStyle="flex: 12; overflow-y: scroll; background-color: rgba(0, 0, 0, 0.2);"
 		/>
 		<div style="display: flex; flex-direction: column;">
 			<div style="display: flex; justify-content: center; gap: 4%; margin: 1%;">
